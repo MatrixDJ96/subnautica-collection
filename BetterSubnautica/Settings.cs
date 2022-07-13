@@ -3,7 +3,7 @@ using SMLHelper.V2.Options.Attributes;
 
 namespace BetterSubnautica
 {
-    [Menu("Better Subnautica")]
+    [Menu("Better Subnautica - Debug")]
     public class Settings : ConfigFile
     {
         [Toggle("Show Debug Info", Tooltip = "Enable debug on screen to show information about entities flagged below")]

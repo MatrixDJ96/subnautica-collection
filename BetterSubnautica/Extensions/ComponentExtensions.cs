@@ -1,5 +1,6 @@
 ﻿using BetterSubnautica.Components;
 using BetterSubnautica.Enums;
+using BetterSubnautica.Utility;
 using HarmonyLib;
 using System;
 using UnityEngine;
@@ -8,10 +9,45 @@ namespace BetterSubnautica.Extensions
 {
     public static class ComponentExtensions
     {
+        public static void WriteComponents(this Component __instance)
+        {
+            WriteComponents(__instance.gameObject);
+        }
+
+        public static void WriteComponents(this GameObject __instance)
+        {
+            foreach (var component in __instance.GetComponentsInParent<Component>())
+            {
+                DebuggerUtility.WriteMessage(__instance.name + ".GetComponentsInParent.Name: " + component.name);
+                DebuggerUtility.WriteMessage(__instance.name + ".GetComponentsInParent.Type: " + component.GetType());
+                DebuggerUtility.WriteMessage("");
+            }
+
+            foreach (var component in __instance.GetComponents<Component>())
+            {
+                DebuggerUtility.WriteMessage(__instance.name + ".GetComponents.Name: " + component.name);
+                DebuggerUtility.WriteMessage(__instance.name + ".GetComponents.Type: " + component.GetType());
+                DebuggerUtility.WriteMessage("");
+            }
+
+            foreach (var component in __instance.GetComponentsInChildren<Component>())
+            {
+                DebuggerUtility.WriteMessage(__instance.name + ".GetComponentsInChildren.Name: " + component.name);
+                DebuggerUtility.WriteMessage(__instance.name + ".GetComponentsInChildren.Type: " + component.GetType());
+                DebuggerUtility.WriteMessage("");
+            }
+        }
+
         public static ToggleLights GetToggleLights<T>(this T __instance) where T : Component
         {
-            return __instance.gameObject.GetComponentInChildren<ToggleLights>();
+            if (__instance is SeaMoth)
+            {
+                return __instance.gameObject.GetComponentInChildren<ToggleLights>(true);
+            }
+
+            return __instance.gameObject.GetComponent<ToggleLights>();
         }
+
         public static GameObject GetLightsParent<T>(this T __instance) where T : Component
         {
             if (__instance.gameObject.transform.Find("lights_parent") is Transform transform)
@@ -26,6 +62,7 @@ namespace BetterSubnautica.Extensions
         {
             return __instance.gameObject.GetComponent<EnergyMixin>();
         }
+
         public static EnergyInterface GetEnergyInterface<T>(this T __instance) where T : Component
         {
             return __instance.gameObject.GetComponent<EnergyInterface>();
@@ -38,9 +75,9 @@ namespace BetterSubnautica.Extensions
 
         public static IEnergySource GetEnergySource<T>(this T __instance) where T : Component
         {
-            if (__instance.GetEnergyMixin() is EnergyMixin energyMixin)
+            if (__instance.GetPowerRelay() is PowerRelay powerRelay)
             {
-                return new EnergyMixinSource() { Component = energyMixin };
+                return new PowerRelaySource() { Component = powerRelay };
             }
 
             if (__instance.GetEnergyInterface() is EnergyInterface energyInterface)
@@ -48,9 +85,9 @@ namespace BetterSubnautica.Extensions
                 return new EnergyInterfaceSource() { Component = energyInterface };
             }
 
-            if (__instance.GetPowerRelay() is PowerRelay powerRelay)
+            if (__instance.GetEnergyMixin() is EnergyMixin energyMixin)
             {
-                return new PowerRelaySource() { Component = powerRelay };
+                return new EnergyMixinSource() { Component = energyMixin };
             }
 
             return null;

@@ -26,7 +26,7 @@ namespace BetterVehicles.Settings
         [Keybind("Vehicle Storage Button")]
         public KeyCode VehicleStorage { get; set; } = KeyCode.V;
 
-        private void AutomaticVehicleRepairEvent(EventArgs e)
+        private void AutomaticVehicleRepairEvent()
         {
             foreach (var item in SubRootContainer.Instance.Dict)
             {

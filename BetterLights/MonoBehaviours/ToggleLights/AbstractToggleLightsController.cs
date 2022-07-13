@@ -1,6 +1,5 @@
 using BetterSubnautica.Components;
 using BetterSubnautica.Extensions;
-using BetterSubnautica.Utility;
 using UnityEngine;
 using UWE;
 
@@ -66,7 +65,7 @@ namespace BetterLights.MonoBehaviours.ToggleLights
 
         protected virtual void OnDestroy()
         {
-            DebuggerUtility.ShowMessage($"Component: {component != null} | ToggleLights: {toggleLights != null} | LightsParent: {lightsParent != null} | EnergySource: {energySource != null}", $"({GetInstanceID()}) {GetType().Name}.Destroy");
+            //DebuggerUtility.ShowMessage($"Component: {component != null} | ToggleLights: {toggleLights != null} | LightsParent: {lightsParent != null} | EnergySource: {energySource != null}", $"({GetInstanceID()}) {GetType().Name}.Destroy");
         }
 
         protected virtual bool InitializeToggleLights(Component component = null)

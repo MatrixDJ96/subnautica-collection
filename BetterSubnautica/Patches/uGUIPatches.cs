@@ -20,6 +20,9 @@ namespace BetterSubnautica.Patches
                 case "Graphics":
                     uGUIUtility.GraphicsTabIndex = __result;
                     break;
+                case "Keyboard":
+                    uGUIUtility.KeyboardTabIndex = __result;
+                    break;
             }
         }
     }

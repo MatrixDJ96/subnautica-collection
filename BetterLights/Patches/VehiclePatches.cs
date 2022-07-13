@@ -10,11 +10,11 @@ namespace BetterLights.Patches
     {
         static void Prefix(Vehicle __instance, bool docked, Vehicle.DockType dockType)
         {
-            if (__instance.gameObject.GetComponent<IToggleLightsController>() is IToggleLightsController toggleLightsController)
+            if (__instance.gameObject.GetComponent<IToggleLightsController>() is IToggleLightsController controller)
             {
                 if (docked || (!docked && Core.VehiclesSettings.EnableLightsOnUndocking))
                 {
-                    toggleLightsController.SetLightsActive(!docked);
+                    controller.SetLightsActive(!docked, true);
                 }
             }
         }

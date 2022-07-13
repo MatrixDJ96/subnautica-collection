@@ -36,7 +36,7 @@ namespace BetterLights.Patches
         {
             if (__instance.gameObject.GetComponent<IToggleLightsController>() is IToggleLightsController toggleLightsController)
             {
-                toggleLightsController.SetLightsActive(toggleLightsController.LightsActive, true);
+                toggleLightsController.SetLightsActive(toggleLightsController.LightsActive);
             }
 
             if (__instance.gameObject.GetComponent<IVolumetricLightsController>() is IVolumetricLightsController volumetricLightsController)
@@ -57,7 +57,7 @@ namespace BetterLights.Patches
         {
             if (__instance.gameObject.GetComponent<IToggleLightsController>() is IToggleLightsController toggleLightsController)
             {
-                toggleLightsController.SetLightsActive(__instance.dockingPoint == null, true);
+                toggleLightsController.SetLightsActive(__instance.dockingPoint == null ? toggleLightsController.LightsActive : false);
             }
 
             if (__instance.gameObject.GetComponent<IVolumetricLightsController>() is IVolumetricLightsController volumetricLightsController)

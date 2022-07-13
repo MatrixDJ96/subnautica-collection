@@ -35,21 +35,30 @@ namespace BetterSubnautica.Utility
             return sb.ToString();
         }
 
-        public static KeyCode GetKeyCode(GameInput.Button button)
+        public static KeyCode GetKeyCode(GameInput.Button button, GameInput.Device device = GameInput.Device.Keyboard, GameInput.BindingSet bindingSet = GameInput.BindingSet.Primary)
         {
-            int numBindingSets = GameInput.GetNumBindingSets();
+            var bindingInternal = GameInput.GetBindingInternal(device, button, bindingSet);
 
-            for (int i = 0; i < numBindingSets; i++)
+            if (bindingInternal != -1)
             {
-                int bindingInternal = GameInput.GetBindingInternal(GameInput.GetPrimaryDevice(), button, (GameInput.BindingSet)i);
-
-                if (bindingInternal != -1)
-                {
-                    return GameInput.inputs[bindingInternal].keyCode;
-                }
+                return GameInput.inputs[bindingInternal].keyCode;
             }
 
             return KeyCode.None;
+        }
+
+        public static void SetKeyCode(GameInput.Button button, KeyCode keyCode, GameInput.Device device = GameInput.Device.Keyboard, GameInput.BindingSet bindingSet = GameInput.BindingSet.Primary)
+        {
+            //DebuggerUtility.ShowMessage($"False -> {keyCode} | {device} | {bindingSet}", $"{button}");
+
+            if (GameInput.IsBindable(device, button))
+            {
+                var inputName = GameInput.GetKeyCodeAsInputName(keyCode);
+
+                GameInput.SetBindingInternal(device, button, bindingSet, inputName);
+
+                //DebuggerUtility.ShowMessage($"True -> {keyCode} ({inputName}) | {device} | {bindingSet}", $"{button}");
+            }
         }
     }
 }

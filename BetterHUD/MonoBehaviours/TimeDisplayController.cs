@@ -56,12 +56,12 @@ namespace BetterHUD.MonoBehaviours
 
         private bool started = false;
 
-        protected void Awake()
+        protected void Start()
         {
-            StartCoroutine(AsyncAwake());
+            StartCoroutine(AsyncStart());
         }
 
-        protected IEnumerator AsyncAwake()
+        protected IEnumerator AsyncStart()
         {
             while (
                 LightmappedPrefabs.main == null || LightmappedPrefabs.main.IsWaitingOnLoads() ||

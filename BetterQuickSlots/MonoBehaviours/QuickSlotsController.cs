@@ -1,5 +1,6 @@
 using BetterQuickSlots.Utility;
 using UnityEngine;
+using BetterSubnautica.MonoBehaviours;
 #if SUBNAUTICA_STABLE
 using Text = UnityEngine.UI.Text;
 #else
@@ -9,11 +10,8 @@ using Text = TMPro.TextMeshProUGUI;
 
 namespace BetterQuickSlots.MonoBehaviours
 {
-    public class QuickSlotsController : MonoBehaviour
+    public class QuickSlotsController : AbstractAwakeSingleton<QuickSlotsController>
     {
-        private static QuickSlotsController instance;
-        public static QuickSlotsController Instance => instance;
-
         private uGUI_QuickSlots component = null;
         public uGUI_QuickSlots Component
         {
@@ -32,17 +30,6 @@ namespace BetterQuickSlots.MonoBehaviours
         public QuickSlots Target => Component != null ? component.target as QuickSlots : null;
 
         public bool ForceUpdate { get; set; } = true;
-
-        protected void Awake()
-        {
-            if (instance != null)
-            {
-                Destroy(this);
-                return;
-            }
-
-            instance = this;
-        }
 
         protected void Update()
         {
@@ -113,6 +100,7 @@ namespace BetterQuickSlots.MonoBehaviours
                             labels[i].rectTransform.anchoredPosition = new Vector2(0f, Icons[i].rectTransform.rect.y - textOffsetY);
                         }
 
+                        SlotsUtility.UpdateSlotBindings();
                         TooltipFactory.RefreshActionStrings();
 
                         ForceUpdate = false;

@@ -18,8 +18,8 @@ namespace BetterSubnautica.Components
             }
         }
 
-        public abstract void ConsumeEnergy(float amount);
-
         public abstract bool HasEnergy();
+        public abstract void GetValues(out float charge, out float capacity);
+        public abstract void ConsumeEnergy(float amount);
     }
 }

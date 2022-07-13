@@ -2,7 +2,7 @@
   "Id": "BetterSubnautica",
   "DisplayName": "Better Subnautica",
   "Author": "MatrixDJ96",
-  "Version": "0.0.3.5",
+  "Version": "0.0.3.6",
   "VersionDependencies": {
     "SMLHelper": "2.13.0"
   },

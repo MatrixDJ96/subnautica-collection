@@ -12,9 +12,9 @@ namespace BetterSubnautica.Patches.Debug
         {
             if (__instance.isCyclops)
             {
-                if (__instance.gameObject.GetComponent<SubRootDebuggerController>() == null)
+                if (__instance.gameObject.GetComponent<CyclopsDebuggerController>() == null)
                 {
-                    __instance.gameObject.AddComponent<SubRootDebuggerController>();
+                    __instance.gameObject.AddComponent<CyclopsDebuggerController>();
                 }
             }
         }

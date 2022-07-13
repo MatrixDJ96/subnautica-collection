@@ -37,6 +37,8 @@ namespace BetterLights.MonoBehaviours.VolumetricLights
 
         public void OnDestroy()
         {
+            //DebuggerUtility.ShowMessage($"Component: {component != null} | VolumetricLights: {VolumetricLights.Length}", $"({GetInstanceID()}) {GetType().Name}.Destroy");
+
             foreach (var item in VolumetricLights)
             {
                 VolumetricLightsContainer.Instance.Dict.Remove(item.GetInstanceID());

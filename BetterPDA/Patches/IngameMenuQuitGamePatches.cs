@@ -1,22 +1,18 @@
 ﻿#if SUBNAUTICA_STABLE
 using BetterSubnautica.Utility;
 using HarmonyLib;
-using UnityEngine;
 using UWE;
 
-namespace BetterSubnautica.Patches
+namespace BetterPDA.Patches
 {
-    [HarmonyPatch(typeof(MainGameController))]
-    [HarmonyPatch(nameof(MainGameController.Update))]
-    class MainGameControllerUpdatePatch
+    [HarmonyPatch(typeof(IngameMenu))]
+    [HarmonyPatch(nameof(IngameMenu.QuitGame))]
+    class IngameMenuQuitGamePatch
     {
-        static void Postfix(MainGameController __instance)
+        static void Prefix(IngameMenu __instance)
         {
-            if (Input.GetKeyDown(KeyCode.P))
-            {
-                // Force resume game
-                FreezeTime.End(PDAUtility.FreezeId);
-            }
+            // Force resume game
+            FreezeTime.End(FreezeTimeUtility.PDAId);
         }
     }
 }

@@ -1,6 +1,7 @@
-﻿using BetterSubnautica.Utility;
+using BetterSubnautica.Utility;
 using HarmonyLib;
 using SMLHelper.V2.Options.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -9,11 +10,11 @@ namespace BetterQuickSlots.Utility
 {
     public class SlotsUtility
     {
-        public static KeyCode Slot1 => KeyCodeUtility.GetKeyCode(GameInput.Button.Slot1);
-        public static KeyCode Slot2 => KeyCodeUtility.GetKeyCode(GameInput.Button.Slot2);
-        public static KeyCode Slot3 => KeyCodeUtility.GetKeyCode(GameInput.Button.Slot3);
-        public static KeyCode Slot4 => KeyCodeUtility.GetKeyCode(GameInput.Button.Slot4);
-        public static KeyCode Slot5 => KeyCodeUtility.GetKeyCode(GameInput.Button.Slot5);
+        public static KeyCode Slot1 => Core.Settings.Slot1;
+        public static KeyCode Slot2 => Core.Settings.Slot2;
+        public static KeyCode Slot3 => Core.Settings.Slot3;
+        public static KeyCode Slot4 => Core.Settings.Slot4;
+        public static KeyCode Slot5 => Core.Settings.Slot5;
         public static KeyCode Slot6 => Core.Settings.Slot6;
         public static KeyCode Slot7 => Core.Settings.Slot7;
         public static KeyCode Slot8 => Core.Settings.Slot8;
@@ -51,16 +52,34 @@ namespace BetterQuickSlots.Utility
             {
                 var bindingFlags = BindingFlags.Public | BindingFlags.Static;
 
-                foreach (var property in typeof(SlotsUtility).GetProperties(bindingFlags))
+                if (typeof(SlotsUtility).GetProperty($"Slot{slot + 1}", bindingFlags) is PropertyInfo property)
                 {
-                    if (property.Name.ToLower() == ("slot" + (slot + 1).ToString()))
-                    {
-                        return KeyCodeUtility.GetName((KeyCode)property.GetValue(null), withColor);
-                    }
+                    return KeyCodeUtility.GetName((KeyCode)property.GetValue(null), withColor);
                 }
             }
 
             return "";
+        }
+
+        public static void UpdateSlotBindings()
+        {
+            var device = GameInput.Device.Keyboard;
+            var bindingSet = GameInput.BindingSet.Primary;
+            var bindingFlags = BindingFlags.Public | BindingFlags.Static;
+
+            for (int i = 0; i < Player.quickSlotButtonsCount; i++)
+            {
+                if (typeof(SlotsUtility).GetProperty($"Slot{i + 1}", bindingFlags) is PropertyInfo property)
+                {
+                    var keyCode = (KeyCode)property.GetValue(null);
+                    var button = (GameInput.Button)Enum.Parse(typeof(GameInput.Button), property.Name);
+
+                    if (GameInput.IsBindable(device, button))
+                    {
+                        KeyCodeUtility.SetKeyCode(button, keyCode, device, bindingSet);
+                    }
+                }
+            }
         }
 
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<OutDir>$(OutputPath)$(ProjectName)\</OutDir>
+		<TargetPath>$(OutDir)$(TargetFileName)</TargetPath>
+		<ModPath>$(GameDir)\QMods\$(ProjectName)\</ModPath>
+		<OutputPath>$(OutDir)</OutputPath>
+	</PropertyGroup>
+	<PropertyGroup>
+		<PostBuildEvent>
+			if exist "$(GameDir)" (
+				if not exist "$(ModPath)" mkdir "$(ModPath)"
+				copy "$(TargetPath)" "$(ModPath)$(TargetFileName)"
+				copy "$(ProjectDir)mod.json" "$(ModPath)mod.json"
+			)
+		</PostBuildEvent>
+	</PropertyGroup>
+	<PropertyGroup>
+		<StartAction>Program</StartAction>
+		<StartProgram>C:\Program Files %28x86%29\Steam\steam.exe</StartProgram>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)' == 'SN.STABLE' Or '$(Configuration)' == 'SN.EXP'">
+		<StartArguments>steam://rungameid/264710</StartArguments>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)' == 'BZ.STABLE' Or '$(Configuration)' == 'BZ.EXP'">
+		<StartArguments>steam://rungameid/848450</StartArguments>
+	</PropertyGroup>
+</Project>

@@ -1,8 +1,8 @@
-﻿#if SUBNAUTICA_STABLE
-using HarmonyLib;
+﻿using HarmonyLib;
 
 namespace BetterVehicles.Patches
 {
+#if SUBNAUTICA_STABLE
     [HarmonyPatch(typeof(PlayerTool))]
     [HarmonyPatch(nameof(PlayerTool.Awake))]
     class SeaglideStartPatch
@@ -63,5 +63,18 @@ namespace BetterVehicles.Patches
             }
         }
     }
-}
+#elif BELOWZERO
+    [HarmonyPatch(typeof(Seaglide))]
+    [HarmonyPatch(nameof(Seaglide.Start))]
+    class SeaglideStartPatch
+    {
+        static void Postfix(Seaglide __instance)
+        {
+            if (__instance.gameObject.GetComponent<VehicleInterface_MapController>() is VehicleInterface_MapController mapController)
+            {
+                mapController.mapActive = false;
+            }
+        }
+    }
 #endif
+}

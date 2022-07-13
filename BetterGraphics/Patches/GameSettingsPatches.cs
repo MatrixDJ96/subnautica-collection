@@ -38,8 +38,6 @@ namespace BetterGraphics.Patches
             {
                 DebuggerUtility.ShowWarning("FullScreen Mode: " + fullScreenMode + " -> " + Screen.fullScreenMode);
             }
-
-            Core.Settings.Save();
         }
     }
 }

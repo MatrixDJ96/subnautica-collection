@@ -6,6 +6,10 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{31CA63B1-7363-4AA7-AA96-D9B180161B2D}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		Builds.targets = Builds.targets
+		Common.props = Common.props
+		Constants.props = Constants.props
+		References.targets = References.targets
 		TODO.md = TODO.md
 	EndProjectSection
 EndProject

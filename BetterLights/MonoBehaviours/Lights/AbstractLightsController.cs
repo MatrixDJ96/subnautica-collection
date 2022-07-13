@@ -1,5 +1,4 @@
 using BetterSubnautica.Extensions;
-using BetterSubnautica.Utility;
 using UnityEngine;
 
 namespace BetterLights.MonoBehaviours.Lights
@@ -121,7 +120,7 @@ namespace BetterLights.MonoBehaviours.Lights
 
         protected virtual void OnDestroy()
         {
-            DebuggerUtility.ShowMessage($"Component: {component != null} | Lights: {lights != null}", $"({GetInstanceID()}) {GetType().Name}.Destroy");
+            //DebuggerUtility.ShowMessage($"Component: {component != null} | Lights: {lights != null}", $"({GetInstanceID()}) {GetType().Name}.Destroy");
         }
 
         public virtual void UpdateColor()

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup Condition="'$(Configuration)' == 'SN.STABLE' Or '$(Configuration)' == 'SN.EXP'">
+		<GameDir>C:\Program Files (x86)\Steam\steamapps\common\Subnautica</GameDir>
+		<ManagedDir>$(GameDir)\Subnautica_Data\Managed</ManagedDir>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)' == 'BZ.STABLE' Or '$(Configuration)' == 'BZ.EXP'">
+		<GameDir>C:\Program Files (x86)\Steam\steamapps\common\SubnauticaZero</GameDir>
+		<ManagedDir>$(GameDir)\SubnauticaZero_Data\Managed</ManagedDir>
+	</PropertyGroup>
+	<PropertyGroup>
+		<Optimize>true</Optimize>
+		<DebugType>none</DebugType>
+		<LangVersion>latest</LangVersion>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<OutputPath>$(SolutionDir)Build\$(Configuration)</OutputPath>
+		<ReferencePath>$(SolutionDir)Dependencies\$(Configuration)</ReferencePath>
+	</PropertyGroup>
+</Project>
