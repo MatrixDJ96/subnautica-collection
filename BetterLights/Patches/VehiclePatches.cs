@@ -1,5 +1,5 @@
-﻿#if SUBNAUTICA
-using BetterLights.MonoBehaviours.ToggleLights;
+#if SUBNAUTICA
+using BetterSubnautica.Components;
 using HarmonyLib;
 
 namespace BetterLights.Patches
@@ -10,7 +10,7 @@ namespace BetterLights.Patches
     {
         static void Prefix(Vehicle __instance, bool docked, Vehicle.DockType dockType)
         {
-            if (__instance.gameObject.GetComponent<IToggleLightsController>() is IToggleLightsController controller)
+            if (__instance.gameObject.GetComponent<IToggleLightsController>() is { } controller)
             {
                 if (docked || (!docked && Core.VehiclesSettings.EnableLightsOnUndocking))
                 {

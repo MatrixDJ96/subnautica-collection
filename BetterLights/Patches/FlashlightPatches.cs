@@ -1,4 +1,4 @@
-﻿using BetterLights.MonoBehaviours.Lights;
+using BetterLights.MonoBehaviours.Lights;
 using BetterLights.MonoBehaviours.ToggleLights;
 using HarmonyLib;
 
@@ -12,15 +12,9 @@ namespace BetterLights.Patches
         {
             if (__instance is FlashLight)
             {
-                if (__instance.gameObject.GetComponent<FlashlightLightsController>() == null)
-                {
-                    __instance.gameObject.AddComponent<FlashlightLightsController>();
-                }
+                __instance.gameObject.EnsureComponent<FlashlightLightsController>();
 
-                if (__instance.gameObject.GetComponent<FlashlightToggleLightsController>() == null)
-                {
-                    __instance.gameObject.AddComponent<FlashlightToggleLightsController>();
-                }
+                __instance.gameObject.EnsureComponent<FlashlightToggleLightsController>();
             }
         }
     }

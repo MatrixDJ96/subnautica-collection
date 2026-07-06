@@ -1,4 +1,4 @@
-﻿namespace BetterVehicles.MonoBehaviours
+namespace BetterVehicles.MonoBehaviours
 {
     public class ExosuitStorageController : AbstractVehicleStorageController
     {
@@ -17,6 +17,5 @@
             // Default storage is already "merged" with extra storages, so return default
             return GetDefaultStorage();
         }
-
     }
 }

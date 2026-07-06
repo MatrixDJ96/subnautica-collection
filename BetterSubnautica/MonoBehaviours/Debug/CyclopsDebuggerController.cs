@@ -1,12 +1,14 @@
-﻿#if SUBNAUTICA
+#if SUBNAUTICA
 using BetterSubnautica.Enums;
 using BetterSubnautica.Extensions;
 
 namespace BetterSubnautica.MonoBehaviours.Debug
 {
-    public class CyclopsDebuggerController : AbstractDebuggerController<SubRoot>
+    public class CyclopsDebuggerController : SubRootDebuggerController
     {
         public override bool ShowDebugInfo => Core.Settings.CyclopsInfo;
+
+        protected override bool ShowLights { get; } = true;
 
         private CyclopsLightingPanel lightingPanel;
         private CyclopsLightingPanel LightingPanel
@@ -34,18 +36,6 @@ namespace BetterSubnautica.MonoBehaviours.Debug
             }
         }
 
-        private PowerRelay powerRelay = null;
-        private PowerRelay PowerRelay
-        {
-            get
-            {
-                if (powerRelay == null && Component != null)
-                {
-                    powerRelay = Component.GetPowerRelay();
-                }
-                return powerRelay;
-            }
-        }
 
         protected override LightsType LightsType
         {
@@ -56,7 +46,7 @@ namespace BetterSubnautica.MonoBehaviours.Debug
                 {
                     lightsType |= LightsType.Internal;
                 }
-                if (ExternalCams != null && ExternalCams.GetUsingCameras())
+                if (ExternalCams != null && ExternalCams.GetActive())
                 {
                     if (ExternalCams.GetLightState() > 0)
                     {
@@ -82,35 +72,9 @@ namespace BetterSubnautica.MonoBehaviours.Debug
                 }
                 if (ExternalCams != null)
                 {
-                    lightsActive |= ExternalCams.GetUsingCameras() && ExternalCams.GetLightState() > 0;
+                    lightsActive |= ExternalCams.GetActive() && ExternalCams.GetLightState() > 0;
                 }
                 return lightsActive;
-            }
-        }
-
-        protected override float Capacity
-        {
-            get
-            {
-                var capacity = 0f;
-                if (PowerRelay != null)
-                {
-                    capacity = PowerRelay.GetMaxPower();
-                }
-                return capacity;
-            }
-        }
-
-        protected override float Charge
-        {
-            get
-            {
-                var charge = 0f;
-                if (PowerRelay != null)
-                {
-                    charge = PowerRelay.GetPower();
-                }
-                return charge;
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿#if SUBNAUTICA
+#if SUBNAUTICA
 using HarmonyLib;
 
 namespace BetterLights.Patches

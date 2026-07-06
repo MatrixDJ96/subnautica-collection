@@ -1,4 +1,4 @@
-﻿using BetterVehicles.MonoBehaviours;
+using BetterVehicles.MonoBehaviours;
 using HarmonyLib;
 
 namespace BetterVehicles.Patches
@@ -9,10 +9,7 @@ namespace BetterVehicles.Patches
     {
         static void Postfix(Exosuit __instance)
         {
-            if (__instance.gameObject.GetComponent<ExosuitStorageController>() == null)
-            {
-                __instance.gameObject.AddComponent<ExosuitStorageController>();
-            }
+            __instance.gameObject.EnsureComponent<ExosuitStorageController>();
         }
     }
 }

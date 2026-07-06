@@ -1,4 +1,4 @@
-﻿using BetterQuickSlots.MonoBehaviours;
+using BetterQuickSlots.MonoBehaviours;
 using BetterQuickSlots.Utility;
 using BetterSubnautica.Utility;
 using HarmonyLib;
@@ -14,12 +14,9 @@ namespace BetterQuickSlots.Patches
     {
         static void Postfix(uGUI __instance)
         {
-            if (uGUI.main == __instance && __instance.quickSlots is uGUI_QuickSlots quickSlots)
+            if (uGUI.main == __instance && __instance.quickSlots is { } quickSlots)
             {
-                if (quickSlots.gameObject.GetComponent<QuickSlotsController>() == null)
-                {
-                    quickSlots.gameObject.AddComponent<QuickSlotsController>();
-                }
+                quickSlots.gameObject.EnsureComponent<QuickSlotsController>();
             }
         }
     }
@@ -28,15 +25,40 @@ namespace BetterQuickSlots.Patches
     [HarmonyPatch(nameof(uGUI_QuickSlots.HandleInput))]
     class uGUIQuickSlotsHandleInputPatch
     {
+#if SUBNAUTICA
         static void Postfix(uGUI_QuickSlots __instance)
         {
-            if (Player.main.GetCanItemBeUsed() && !uGUI.isIntro && !uGUI.isLoading && __instance.target != null)
+            if (Player.main.GetCanItemBeUsed() && !uGUI.isIntro && !IntroLifepodDirector.IsActive && __instance.target != null)
+            {
+                for (int i = SlotsUtility.VanillaSlotCount; i < Core.Settings.SlotCount; i++)
+                {
+                    var button = Buttons.ExtraSlots[i - SlotsUtility.VanillaSlotCount];
+
+                    if (GameInput.GetButtonDown(button))
+                    {
+                        __instance.target.SlotKeyDown(i);
+                    }
+                    else if (GameInput.GetButtonHeld(button))
+                    {
+                        __instance.target.SlotKeyHeld(i);
+                    }
+                    if (GameInput.GetButtonUp(button))
+                    {
+                        __instance.target.SlotKeyUp(i);
+                    }
+                }
+            }
+        }
+#else
+        static void Postfix(uGUI_QuickSlots __instance)
+        {
+            if (Player.main.GetCanItemBeUsed() && !uGUI.isIntro && !WaitScreen.IsWaiting && __instance.target != null)
             {
                 var bindingFlags = BindingFlags.Public | BindingFlags.Static;
 
-                for (int i = Player.quickSlotButtonsCount; i < Core.Settings.SlotCount; i++)
+                for (int i = SlotsUtility.VanillaSlotCount; i < Core.Settings.SlotCount; i++)
                 {
-                    if (typeof(SlotsUtility).GetProperty($"Slot{i + 1}", bindingFlags) is PropertyInfo property)
+                    if (typeof(SlotsUtility).GetProperty($"Slot{i + 1}", bindingFlags) is { } property)
                     {
                         var keyCode = (KeyCode)property.GetValue(null);
 
@@ -52,8 +74,10 @@ namespace BetterQuickSlots.Patches
                 }
             }
         }
+#endif
     }
 
+#if BELOWZERO
     [HarmonyPatch(typeof(uGUI_TabbedControlsPanel))]
     [HarmonyPatch(
         nameof(uGUI_TabbedControlsPanel.AddBindingOption),
@@ -68,9 +92,9 @@ namespace BetterQuickSlots.Patches
             {
                 var bindingFlags = BindingFlags.Public | BindingFlags.Static;
 
-                for (int i = 0; i < Player.quickSlotButtonsCount; i++)
+                for (int i = 0; i < SlotsUtility.VanillaSlotCount; i++)
                 {
-                    if (typeof(SlotsUtility).GetProperty($"Slot{i + 1}", bindingFlags) is PropertyInfo property)
+                    if (typeof(SlotsUtility).GetProperty($"Slot{i + 1}", bindingFlags) is { } property)
                     {
                         if ("Option" + property.Name == label)
                         {
@@ -81,4 +105,5 @@ namespace BetterQuickSlots.Patches
             }
         }
     }
+#endif
 }

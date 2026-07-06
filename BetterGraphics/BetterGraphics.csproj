@@ -1,45 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <Import Project="$(SolutionDir)Common.props" />
-  <PropertyGroup>
-    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
-    <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
-    <ProjectGuid>{EFB5C715-B2E8-4F98-9640-9392FE9BBE27}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BetterGraphics</RootNamespace>
-    <AssemblyName>BetterGraphics</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-  </PropertyGroup>
-  <Import Project="$(SolutionDir)References.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\BetterSubnautica\BetterSubnautica.csproj">
-      <Project>{b6665795-a64e-4401-bc3f-5abfc3adb20e}</Project>
-      <Name>BetterSubnautica</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="mod.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Core.cs" />
-    <Compile Include="Patches\BasePatches.cs" />
-    <Compile Include="Patches\GameSettingsPatches.cs" />
-    <Compile Include="Patches\GraphicsUtilPatches.cs" />
-    <Compile Include="Patches\MainMenuPatches.cs" />
-    <Compile Include="Patches\SkyApplierPatches.cs" />
-    <Compile Include="Patches\uGUIPatches.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.cs" />
-  </ItemGroup>
-  <Import Project="$(SolutionDir)Constants.props" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)Builds.targets" />
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>BetterGraphics</RootNamespace>
+        <AssemblyName>BetterGraphics</AssemblyName>
+    </PropertyGroup>
+
 </Project>

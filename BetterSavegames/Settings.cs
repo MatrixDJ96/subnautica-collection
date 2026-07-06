@@ -1,5 +1,5 @@
-﻿using SMLHelper.V2.Json;
-using SMLHelper.V2.Options.Attributes;
+using Nautilus.Json;
+using Nautilus.Options.Attributes;
 using UnityEngine;
 
 namespace BetterSavegames
@@ -7,10 +7,14 @@ namespace BetterSavegames
     [Menu("Better Savegames")]
     public class Settings : ConfigFile
     {
+#if SUBNAUTICA
         [Keybind("Quicksave Button")]
+#endif
         public KeyCode Quicksave { get; set; } = KeyCode.F5;
 
+#if SUBNAUTICA
         [Keybind("Quickload Button")]
+#endif
         public KeyCode Quickload { get; set; } = KeyCode.F9;
 
         [Toggle("Enable Autosave")]

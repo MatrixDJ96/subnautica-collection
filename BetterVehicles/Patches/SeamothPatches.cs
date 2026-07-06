@@ -1,4 +1,4 @@
-﻿#if SUBNAUTICA
+#if SUBNAUTICA
 using BetterVehicles.MonoBehaviours;
 using HarmonyLib;
 
@@ -10,10 +10,7 @@ namespace BetterVehicles.Patches
     {
         static void Postfix(SeaMoth __instance)
         {
-            if (__instance.gameObject.GetComponent<SeamothStorageController>() == null)
-            {
-                __instance.gameObject.AddComponent<SeamothStorageController>();
-            }
+            __instance.gameObject.EnsureComponent<SeamothStorageController>();
         }
     }
 }
