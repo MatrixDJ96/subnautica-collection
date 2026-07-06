@@ -1,12 +1,10 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
-using static BetterSubnautica.MonoBehaviours.Debug.DebuggerController;
 
-namespace BetterSubnautica.MonoBehaviours.Debug
+namespace BetterSubnautica.MonoBehaviours
 {
-    public class DebuggerController : AbstractSingletonContainer<DebuggerController, string, Message>
+    public class DebuggerController : AbstractSingletonContainer<DebuggerController, string, DebuggerController.Message>
     {
         public struct Message
         {
@@ -101,11 +99,6 @@ namespace BetterSubnautica.MonoBehaviours.Debug
             {
                 Dict.Remove(key);
             }
-        }
-
-        public void WriteMessage(string text, string key = null, bool prefix = true)
-        {
-            Console.WriteLine(GenerateString(text, key, prefix));
         }
 
         public void ClearMessages()

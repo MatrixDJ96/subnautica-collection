@@ -1,4 +1,4 @@
-﻿using BetterSubnautica.MonoBehaviours;
+using BetterSubnautica.MonoBehaviours;
 
 namespace BetterVehicles.MonoBehaviours
 {

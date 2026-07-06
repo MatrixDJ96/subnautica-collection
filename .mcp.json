@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "betterremote-local": {
+      "command": "python",
+      "args": ["tools/betterremote_mcp.py"]
+    },
+    "betterremote-remote": {
+      "command": "python",
+      "args": ["tools/betterremote_mcp.py"],
+      "env": {
+        "BETTERREMOTE_PORT": "2601"
+      }
+    }
+  }
+}

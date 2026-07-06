@@ -1,4 +1,4 @@
-﻿using BetterHUD.MonoBehaviours;
+using BetterHUD.MonoBehaviours;
 using HarmonyLib;
 
 namespace BetterHUD.Patches
@@ -9,10 +9,7 @@ namespace BetterHUD.Patches
     {
         static void Postfix(Player __instance)
         {
-            if (__instance.gameObject.GetComponent<TimeDisplayController>() == null)
-            {
-                __instance.gameObject.AddComponent<TimeDisplayController>();
-            }
+            __instance.gameObject.EnsureComponent<TimeDisplayController>();
         }
     }
 }

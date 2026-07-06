@@ -1,0 +1,93 @@
+<Project>
+    <ItemDefinitionGroup>
+        <PackageReference ExcludeAssets="runtime"/>
+        <ProjectReference Private="false"/>
+        <Reference Private="false"/>
+    </ItemDefinitionGroup>
+
+    <ItemGroup>
+        <ManagedDll Include="$(ManagedDir)\**\*.dll"/>
+        <Reference Include="@(ManagedDll)"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <DepsDll Include="$(ReferencePath)\**\*.dll"/>
+        <Reference Include="@(DepsDll)"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(IsSubnautica)' == 'true' And '$(IsMultiplayer)' == 'true'">
+        <NitroxDll Include="$(NitroxDir)\**\*.dll"/>
+        <Reference Include="@(NitroxDll)"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(IsBelowZero)' == 'true' And '$(IsMultiplayer)' == 'true'">
+        <NitroxDll Include="$(NitroxDir)\Subnautica.*.dll"/>
+        <NitroxDll Include="$(NitroxDir)\Dependencies\*.dll"/>
+        <NitroxDll Include="$(NitroxDir)\Plugins\Subnautica.*.dll"/>
+        <Reference Include="@(NitroxDll)"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(AssemblyName)' != 'BetterSubnautica'">
+        <ProjectReference Include="..\BetterSubnautica\BetterSubnautica.csproj"/>
+        <ProjectReference Condition="'$(AssemblyName)' != 'BetterNitrox' And '$(IsMultiplayer)' == 'true'" Include="..\BetterNitrox\BetterNitrox.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.0" PrivateAssets="all"/>
+        <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all"/>
+        <PackageReference Include="BepInEx.Core" Version="5.4.21"/>
+        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(IsSubnautica)' == 'true'">
+        <PackageReference Include="Subnautica.Nautilus" Version="1.0.0-pre.51" GeneratePathProperty="true" ExcludeAssets="all"/>
+
+        <Reference Include="Nautilus">
+            <HintPath>$(PkgSubnautica_Nautilus)\lib\net472\Nautilus.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(IsBelowZero)' == 'true'">
+        <PackageReference Include="SubnauticaZero.Nautilus" Version="1.0.0-pre.51" GeneratePathProperty="true" ExcludeAssets="all"/>
+
+        <Reference Include="Nautilus">
+            <HintPath>$(PkgSubnauticaZero_Nautilus)\lib\net472\Nautilus.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Publicize Include="Assembly-CSharp"/>
+        <Publicize Include="Assembly-CSharp-firstpass"/>
+    </ItemGroup>
+
+    <!--<Target Name="Dump" BeforeTargets="ResolveAssemblyReferences">
+        <Message Text="Configuration = '$(Configuration)'" Importance="high"/>
+        <Message Text="NitroxDir = $(NitroxDir)" Importance="high"/>
+        <Message Text="NitroxDll = @(NitroxDll, ';')" Importance="high"/>
+        <Message Text="GameDir = $(GameDir)" Importance="high"/>
+        <Message Text="GameDll = @(GameDll, ';')" Importance="high"/>
+    </Target>-->
+
+    <Target Name="CopyToGameFolder" AfterTargets="Build" Condition="'$(GameDir)' != ''">
+        <Message Importance="high" Text="Copying files to game directory." />
+
+        <ItemGroup>
+            <OutputFiles Include="$(OutputPath)\**\*"/>
+        </ItemGroup>
+
+        <PropertyGroup>
+            <PluginsPath>$(GameDir)\BepInEx\plugins\MatrixDJ96</PluginsPath>
+            <FinalPath>$(PluginsPath)\$(AssemblyName)</FinalPath>
+        </PropertyGroup>
+
+        <RemoveDir Directories="$(FinalPath)" />
+        <MakeDir Directories="$(FinalPath)" />
+
+        <Message Text="OutputPath = $(OutputPath)" Importance="high"/>
+        <Message Text="PluginsPath = '$(PluginsPath)'" Importance="high"/>
+        <Message Text="FinalPath = $(FinalPath)" Importance="high"/>
+        <Message Text="OutputFiles = @(OutputFiles, ';')" Importance="high"/>
+
+        <Copy SourceFiles="@(OutputFiles)" DestinationFolder="$(FinalPath)\%(RecursiveDir)"/>
+    </Target>
+</Project>

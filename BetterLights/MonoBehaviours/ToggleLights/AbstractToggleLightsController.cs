@@ -1,3 +1,4 @@
+using System.Collections;
 using BetterSubnautica.Components;
 using BetterSubnautica.Extensions;
 using UnityEngine;
@@ -65,7 +66,25 @@ namespace BetterLights.MonoBehaviours.ToggleLights
 
         protected virtual void OnDestroy()
         {
-            //DebuggerUtility.ShowMessage($"Component: {component != null} | ToggleLights: {toggleLights != null} | LightsParent: {lightsParent != null} | EnergySource: {energySource != null}", $"({GetInstanceID()}) {GetType().Name}.Destroy");
+            if (toggleLights != null)
+            {
+                ToggleLightsRegistry.Unregister(toggleLights, this);
+            }
+        }
+
+        protected IEnumerator CreateToggleLightsAsync()
+        {
+            var request = CraftData.GetPrefabForTechTypeAsync(TechType.Seamoth);
+            yield return request;
+            SeaMoth seamoth = request.GetResult().GetComponent<SeaMoth>();
+
+            if (seamoth == null || !InitializeToggleLights(seamoth))
+            {
+                Destroy(this);
+                yield break;
+            }
+
+            Start();
         }
 
         protected virtual bool InitializeToggleLights(Component component = null)
@@ -82,6 +101,8 @@ namespace BetterLights.MonoBehaviours.ToggleLights
                     offSound = toggleLights.offSound;
 
                     toggleLights.energyPerSecond = 0f;
+
+                    ToggleLightsRegistry.Register(toggleLights, this);
 
                     return true;
                 }
@@ -144,6 +165,12 @@ namespace BetterLights.MonoBehaviours.ToggleLights
         {
             if (lightsParent != null)
             {
+#if DEBUG_LOGS
+                if (lightsParent.activeSelf != LightsActive)
+                {
+                    BetterLights.Plugin.Core.Logger.LogInfo($"[Lights] FIX {GetType().Name}#{GetInstanceID()} lightsParent {lightsParent.activeSelf}->{LightsActive}");
+                }
+#endif
                 lightsParent.SetActive(LightsActive);
             }
         }
@@ -170,11 +197,16 @@ namespace BetterLights.MonoBehaviours.ToggleLights
 
         public virtual bool CanToggleLightsActive()
         {
-            return KeyDown && !Player.main.GetPDA().isInUse && FreezeTime.freezers.Count == 0;
+            // UWE.Utils.lockCursor goes false whenever a UI owns the input (multiplayer in-game
+            // menu, keybind capture) and stays true while piloting or driving a MapRoomCamera
+            return KeyDown && !Player.main.GetPDA().isInUse && FreezeTime.freezers.Count == 0 && UWE.Utils.lockCursor;
         }
 
         public virtual void SetLightsActive(bool active, bool force = false)
         {
+#if DEBUG_LOGS
+            BetterLights.Plugin.Core.Logger.LogInfo($"[Lights] CTRL {GetType().Name}#{GetInstanceID()} SetLightsActive(active={active}, force={force}) was={LightsActive}");
+#endif
             if (!IsPowered())
             {
                 active = false;
@@ -182,7 +214,9 @@ namespace BetterLights.MonoBehaviours.ToggleLights
 
             if (LightsActive != active || force)
             {
-                if (LightsActive != active)
+                var changed = LightsActive != active;
+
+                if (changed)
                 {
                     if (active)
                     {
@@ -209,6 +243,11 @@ namespace BetterLights.MonoBehaviours.ToggleLights
                 }
 
                 lightsActive = active;
+
+                if (changed)
+                {
+                    ToggleLightsEvents.NotifyLightsChanged(this, active);
+                }
             }
 
             FixToggleLights();

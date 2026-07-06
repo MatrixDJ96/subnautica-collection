@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>BetterMap</RootNamespace>
+        <AssemblyName>BetterMap</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(IsSubnautica)' == 'true'">
+        <Publicize Include="SubnauticaMap"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(IsBelowZero)' == 'true'">
+        <Publicize Include="SubnauticaMap_BZ"/>
+    </ItemGroup>
+
+</Project>

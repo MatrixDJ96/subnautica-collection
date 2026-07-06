@@ -1,4 +1,4 @@
-﻿#if BELOWZERO
+#if BELOWZERO
 using BetterSubnautica.MonoBehaviours.Debug;
 using HarmonyLib;
 
@@ -10,10 +10,7 @@ namespace BetterSubnautica.Patches.Debug
     {
         static void Postfix(Hoverbike __instance)
         {
-            if (__instance.gameObject.GetComponent<HoverbikeDebuggerController>() == null)
-            {
-                __instance.gameObject.AddComponent<HoverbikeDebuggerController>();
-            }
+            __instance.gameObject.EnsureComponent<HoverbikeDebuggerController>();
         }
     }
 }

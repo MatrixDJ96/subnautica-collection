@@ -7,6 +7,10 @@ using System.IO;
 using UnityEngine;
 using UWE;
 
+#if BELOWZERO_MULTI
+using Subnautica.API.Features;
+#endif
+
 namespace BetterSavegames.MonoBehaviours
 {
     public class SavegameController : AbstractAwakeSingleton<SavegameController>
@@ -26,6 +30,21 @@ namespace BetterSavegames.MonoBehaviours
         public static string SlotAuto { get; } = "slotautosave";
         public static string SlotQuick { get; } = "slotquicksave";
 
+#if BELOWZERO_MULTI
+        protected override void Awake()
+        {
+            // Saving is server-managed in a multiplayer session: vanilla slot
+            // directories do not exist there, so the controller stays inert.
+            if (!string.IsNullOrWhiteSpace(Network.Session.Current?.ServerId))
+            {
+                Destroy(this);
+                return;
+            }
+
+            base.Awake();
+        }
+#endif
+
         protected void Start()
         {
             StartCoroutine(AsyncStart());
@@ -35,8 +54,8 @@ namespace BetterSavegames.MonoBehaviours
         {
             while (
                 LightmappedPrefabs.main == null || LightmappedPrefabs.main.IsWaitingOnLoads() ||
-                PAXTerrainController.main == null || PAXTerrainController.main.isWorking ||
-                uGUI.main == null || uGUI.isLoading || HandReticle.main == null
+                PAXTerrainController.main == null || uGUI.main == null ||
+                WaitScreen.IsWaiting || HandReticle.main == null
                 )
             {
                 yield return null;
@@ -66,14 +85,7 @@ namespace BetterSavegames.MonoBehaviours
         {
             if (Started)
             {
-                //DebuggerUtility.ShowMessage($"{OriginalSlot}", $"1 ({GetInstanceID()}) {GetType().Name}.OriginalSlot");
-                //DebuggerUtility.ShowMessage($"{PreviousSlot}", $"2 ({GetInstanceID()}) {GetType().Name}.PreviousSlot");
-                //DebuggerUtility.ShowMessage($"{LatestSlot}", $"3 ({GetInstanceID()}) {GetType().Name}.LatestSlot");
-                //DebuggerUtility.ShowMessage($"{Saving}", $"4 ({GetInstanceID()}) {GetType().Name}.Saving");
-                //DebuggerUtility.ShowMessage($"{Copying}", $"5 ({GetInstanceID()}) {GetType().Name}.Copying");
-                //DebuggerUtility.ShowMessage($"{CanSaveGame()}", $"6 ({GetInstanceID()}) {GetType().Name}.CanSaveGame");
-
-                if (FreezeTime.freezers.Count == 0)
+                if (!FreezeTime.HasFreezers())
                 {
                     AutosaveTimer += Time.deltaTime;
                 }
@@ -83,21 +95,44 @@ namespace BetterSavegames.MonoBehaviours
                     StartCoroutine(SaveToSlot(SlotAuto, true));
                 }
 
-                if (Input.GetKeyDown(Core.Settings.Quicksave))
+                // AvatarInputHandler is disabled whenever a UI owns the input (in-game menu,
+                // PDA, keybind capture) — without this gate a rebind press also fires the action
+                if (AvatarInputHandler.main != null && AvatarInputHandler.main.IsEnabled())
                 {
-                    StartCoroutine(SaveToSlot(SlotQuick));
-                }
+#if SUBNAUTICA
+                    if (GameInput.GetButtonDown(Buttons.Quicksave))
+                    {
+                        StartCoroutine(SaveToSlot(SlotQuick));
+                    }
 
-                if (Input.GetKeyDown(Core.Settings.Quickload))
-                {
-                    StartCoroutine(LoadLatestSlot());
+                    if (GameInput.GetButtonDown(Buttons.Quickload))
+                    {
+                        StartCoroutine(LoadLatestSlot());
+                    }
+#else
+                    if (Input.GetKeyDown(Core.Settings.Quicksave))
+                    {
+                        StartCoroutine(SaveToSlot(SlotQuick));
+                    }
+
+                    if (Input.GetKeyDown(Core.Settings.Quickload))
+                    {
+                        StartCoroutine(LoadLatestSlot());
+                    }
+#endif
                 }
             }
         }
 
         public bool CanSaveGame()
         {
-            return Started && !Saving && !Copying && IngameMenu.main.GetAllowSaving() && !GameModeUtils.IsPermadeath();
+#if SUBNAUTICA
+            var permadeath = GameModeUtils.IsPermadeath();
+#else
+            var permadeath = GameModeManager.GetOption<bool>(GameOption.PermanentDeath);
+#endif
+
+            return Started && !Saving && !Copying && IngameMenu.main.GetAllowSaving() && !permadeath;
         }
 
         public string GetSlotPath(string slotName)
@@ -195,7 +230,6 @@ namespace BetterSavegames.MonoBehaviours
 
                 IngameMenu.main.Open();
                 IngameMenu.main.mainPanel.SetActive(false);
-                IngameMenu.main.SetPleaseWaitVisible(true);
 
                 // Copy current savegame to requested slot
                 if (PreviousSlot != LatestSlot)
@@ -210,7 +244,6 @@ namespace BetterSavegames.MonoBehaviours
                 yield return IngameMenu.main.SaveGameAsync();
                 SaveLoadManager.main.currentSlot = OriginalSlot;
 
-                IngameMenu.main.SetPleaseWaitVisible(false);
                 IngameMenu.main.Close();
 
                 if (resetTimer)

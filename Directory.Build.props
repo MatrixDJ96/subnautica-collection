@@ -1,0 +1,60 @@
+<Project>
+    <PropertyGroup Condition="'$(Configuration)' == 'SN.STABLE'">
+        <DefineConstants>SUBNAUTICA;STABLE;SUBNAUTICA_STABLE</DefineConstants>
+        <IsSubnautica>true</IsSubnautica>
+        <IsStable>true</IsStable>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'SN.MULTI'">
+        <DefineConstants>SUBNAUTICA;MULTI;SUBNAUTICA_MULTI</DefineConstants>
+        <IsSubnautica>true</IsSubnautica>
+        <IsMultiplayer>true</IsMultiplayer>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' == 'BZ.STABLE'">
+        <DefineConstants>BELOWZERO;STABLE;BELOWZERO_STABLE</DefineConstants>
+        <IsBelowZero>true</IsBelowZero>
+        <IsStable>true</IsStable>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'BZ.MULTI'">
+        <DefineConstants>BELOWZERO;MULTI;BELOWZERO_MULTI</DefineConstants>
+        <IsBelowZero>true</IsBelowZero>
+        <IsMultiplayer>true</IsMultiplayer>
+    </PropertyGroup>
+
+    <Import Project="$(MSBuildThisFileDirectory)GameDir.targets"/>
+
+    <PropertyGroup>
+        <TargetFramework>net48</TargetFramework>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+
+        <Version>0.0.3.7</Version>
+        <FileVersion>0.0.3.7</FileVersion>
+
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>latest</LangVersion>
+        <Optimize>true</Optimize>
+        <Configurations>SN.STABLE;SN.MULTI;BZ.STABLE;BZ.MULTI</Configurations>
+        <Platforms>AnyCPU</Platforms>
+
+        <Company>MatrixDJ96</Company>
+        <Copyright>Copyright © 2025</Copyright>
+
+        <!-- OutputPath è una proprietà: va risolta qui, prima che l'SDK la consumi.
+             $(AssemblyName) non esiste ancora a questo punto, $(MSBuildProjectName) sì. -->
+        <OutputPath>$(MSBuildThisFileDirectory)Output\$(Configuration)\$(MSBuildProjectName)</OutputPath>
+        <ReferencePath>$(MSBuildThisFileDirectory)Dependencies\$(Configuration)</ReferencePath>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <NoWarn>$(NoWarn);MSB3246;MSB3277</NoWarn>
+    </PropertyGroup>
+
+    <!-- Diagnostic light-state logging is compiled in by default; a release build strips it
+         with -p:DebugLogs=false. The per-configuration DefineConstants are set above, so this
+         group appends DEBUG_LOGS to them. -->
+    <PropertyGroup>
+        <DebugLogs Condition="'$(DebugLogs)' == ''">true</DebugLogs>
+        <DefineConstants Condition="'$(DebugLogs)' == 'true'">$(DefineConstants);DEBUG_LOGS</DefineConstants>
+    </PropertyGroup>
+</Project>

@@ -1,4 +1,4 @@
-﻿using BetterLights.MonoBehaviours.VolumetricLights;
+using BetterLights.MonoBehaviours.VolumetricLights;
 using BetterSubnautica.MonoBehaviours;
 
 namespace BetterLights.MonoBehaviours

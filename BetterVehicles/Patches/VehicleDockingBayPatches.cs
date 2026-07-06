@@ -1,4 +1,4 @@
-﻿#if BELOWZERO
+#if BELOWZERO
 using HarmonyLib;
 
 namespace BetterVehicles.Patches

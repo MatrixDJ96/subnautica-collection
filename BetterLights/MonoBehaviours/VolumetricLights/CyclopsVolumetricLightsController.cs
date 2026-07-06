@@ -1,4 +1,4 @@
-﻿#if SUBNAUTICA
+#if SUBNAUTICA
 namespace BetterLights.MonoBehaviours.VolumetricLights
 {
     public class CyclopsVolumetricLightsController : AbstractVolumetricLightsController<SubRoot>

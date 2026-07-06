@@ -1,8 +1,18 @@
-﻿namespace BetterSubnautica.Utility
+namespace BetterSubnautica.Utility
 {
     public static class InventoryUtility
     {
-#if BELOWZERO
+#if SUBNAUTICA
+        public static ItemAction GetEatUseItemAction(InventoryItem item)
+        {
+            if (item != null && Inventory.main is Inventory inventory)
+            {
+                return inventory.GetAllItemActions(item) & (ItemAction.Eat | ItemAction.Use);
+            }
+
+            return ItemAction.None;
+        }
+#elif BELOWZERO
         public static ItemAction GetEatUseItemAction(InventoryItem item)
         {
             var result = ItemAction.None;
@@ -11,17 +21,23 @@
             {
                 var techType = pickupable.GetTechType();
 
-                GameModeUtils.GetGameMode(out var mode, out var _);
+                var hunger = GameModeManager.GetOption<bool>(GameOption.Hunger);
+                var thirst = GameModeManager.GetOption<bool>(GameOption.Thirst);
+                var oxygen = GameModeManager.GetOption<bool>(GameOption.OxygenDepletes) && GameModeManager.GetOption<bool>(GameOption.OrganicOxygenSources);
+                var cold = GameModeManager.GetOption<bool>(GameOption.BodyTemperatureDecreases);
+                var vegetarian = GameModeManager.GetOption<bool>(GameOption.VegetarianDiet);
 
-                var survival = !GameModeUtils.IsOptionActive(mode, GameModeOption.NoSurvival);
-                var oxygen = !GameModeUtils.IsOptionActive(mode, GameModeOption.NoOxygen);
-                var cold = !GameModeUtils.IsOptionActive(mode, GameModeOption.NoCold);
-
-                if (pickupable != null && pickupable.GetComponentInParent<Planter>() == null && pickupable.GetComponent<Eatable>() is Eatable eatable)
+                if (pickupable.GetComponentInParent<Planter>() == null && pickupable.GetComponent<Eatable>() is Eatable eatable)
                 {
-                    if (survival || (oxygen && techType == TechType.Bladderfish) || (cold && eatable.coldMeterValue < 0f))
+                    if (!vegetarian || !TechTypeGroups.IsTechTypeInGroup(techType, TechTypeGroup.NonVegetarian))
                     {
-                        result |= ItemAction.Eat;
+                        if ((oxygen && techType == TechType.Bladderfish)
+                            || (hunger && eatable.GetFoodValue() != 0f)
+                            || (thirst && eatable.GetWaterValue() != 0f)
+                            || (cold && eatable.coldMeterValue < 0f))
+                        {
+                            result |= ItemAction.Eat;
+                        }
                     }
                 }
 

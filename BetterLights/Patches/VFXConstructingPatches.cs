@@ -1,4 +1,4 @@
-﻿#if BELOWZERO
+#if BELOWZERO
 using BetterLights.MonoBehaviours.ToggleLights;
 using BetterSubnautica.Extensions;
 using HarmonyLib;
@@ -11,9 +11,12 @@ namespace BetterLights.Patches
     {
         static void Postfix(VFXConstructing __instance)
         {
-            if (__instance.gameObject.GetComponent<SeaTruckSegment>() is SeaTruckSegment seatruck && seatruck.IsMainSegment())
+            if (__instance.gameObject.GetComponent<SeaTruckSegment>() is { } seatruck && seatruck.IsMainSegment())
             {
-                if (seatruck.gameObject.GetComponent<IToggleLightsController>() is IToggleLightsController controller)
+                // During the construction animation the light children are inactive, so the
+                // controller added by the Start patch destroys itself: re-ensure it now that
+                // the vehicle is complete.
+                if (seatruck.gameObject.EnsureComponent<SeatruckToggleLightsController>() is { } controller)
                 {
                     controller.SetLightsActive(true, true);
                 }

@@ -8,7 +8,7 @@ namespace BetterGraphics.Patches
     [HarmonyPatch(nameof(GameSettings.SerializeSettings))]
     class GameSettingsSerializeSettingsPatch
     {
-        static void Postfix(GameSettings __instance, GameSettings.ISerializer serializer)
+        static void Postfix()
         {
             var resolutionWidth = Screen.width;
             var resolutionHeight = Screen.height;
@@ -29,14 +29,14 @@ namespace BetterGraphics.Patches
 
             GraphicsUtility.OnQualityLevelChanged();
 
-            if (resolutionWidth != Screen.width || resolutionHeight != Screen.height)
+            if (resolutionWidth != Core.Settings.ResolutionWidth || resolutionHeight != Core.Settings.ResolutionHeight)
             {
-                DebuggerUtility.ShowWarning("Resolution: " + resolutionWidth + "x" + resolutionHeight + " -> " + Screen.width + "x" + Screen.height);
+                DebuggerUtility.ShowMessage("Resolution: " + resolutionWidth + "x" + resolutionHeight + " -> " + Core.Settings.ResolutionWidth + "x" + Core.Settings.ResolutionHeight);
             }
 
-            if (fullScreenMode != Screen.fullScreenMode)
+            if (fullScreenMode != Core.Settings.GetFixedFullScreenMode())
             {
-                DebuggerUtility.ShowWarning("FullScreen Mode: " + fullScreenMode + " -> " + Screen.fullScreenMode);
+                DebuggerUtility.ShowMessage("FullScreen Mode: " + fullScreenMode + " -> " + Core.Settings.GetFixedFullScreenMode());
             }
         }
     }

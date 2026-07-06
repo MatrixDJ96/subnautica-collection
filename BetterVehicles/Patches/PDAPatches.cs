@@ -1,4 +1,4 @@
-﻿using BetterVehicles.MonoBehaviours;
+using BetterVehicles.MonoBehaviours;
 using HarmonyLib;
 using System;
 
@@ -21,7 +21,7 @@ namespace BetterVehicles.Patches
 
                 foreach (var storageContainer in storageContainers)
                 {
-                    if (storageContainers != null)
+                    if (storageContainer != null)
                     {
                         Inventory.main.SetUsedStorage(storageContainer, true);
                     }

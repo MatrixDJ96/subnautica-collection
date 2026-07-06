@@ -1,1 +1,5 @@
+# Normalize line endings on checkin; working-tree endings follow core.autocrlf.
 * text=auto
+
+# Shell scripts (Claude Code hooks) must stay LF to run under Git Bash.
+*.sh text eol=lf

@@ -1,4 +1,4 @@
-﻿using BetterLights.MonoBehaviours.Lights;
+using BetterLights.MonoBehaviours.Lights;
 using BetterLights.MonoBehaviours.ToggleLights;
 using HarmonyLib;
 
@@ -12,15 +12,9 @@ namespace BetterLights.Patches
         {
             if (__instance is Seaglide seaglide)
             {
-                if (__instance.gameObject.GetComponent<SeaglideLightsController>() == null)
-                {
-                    __instance.gameObject.AddComponent<SeaglideLightsController>();
-                }
+                __instance.gameObject.EnsureComponent<SeaglideLightsController>();
 
-                if (__instance.gameObject.GetComponent<SeaglideToggleLightsController>() == null)
-                {
-                    __instance.gameObject.AddComponent<SeaglideToggleLightsController>();
-                }
+                __instance.gameObject.EnsureComponent<SeaglideToggleLightsController>();
             }
         }
     }

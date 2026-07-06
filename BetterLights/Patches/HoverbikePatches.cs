@@ -1,4 +1,4 @@
-﻿#if BELOWZERO
+#if BELOWZERO
 using BetterLights.MonoBehaviours.Lights;
 using BetterLights.MonoBehaviours.ToggleLights;
 using BetterLights.MonoBehaviours.VolumetricLights;
@@ -12,20 +12,11 @@ namespace BetterLights.Patches
     {
         static void Postfix(Hoverbike __instance)
         {
-            if (__instance.gameObject.GetComponent<HoverbikeLightsController>() == null)
-            {
-                __instance.gameObject.AddComponent<HoverbikeLightsController>();
-            }
+            __instance.gameObject.EnsureComponent<HoverbikeLightsController>();
 
-            if (__instance.gameObject.GetComponent<HoverbikeToggleLightsController>() == null)
-            {
-                __instance.gameObject.AddComponent<HoverbikeToggleLightsController>();
-            }
+            __instance.gameObject.EnsureComponent<HoverbikeToggleLightsController>();
 
-            if (__instance.gameObject.GetComponent<HoverbikeVolumetricLightsController>() == null)
-            {
-                __instance.gameObject.AddComponent<HoverbikeVolumetricLightsController>();
-            }
+            __instance.gameObject.EnsureComponent<HoverbikeVolumetricLightsController>();
         }
     }
 
@@ -36,12 +27,9 @@ namespace BetterLights.Patches
     {
         static void Postfix(Hoverbike __instance)
         {
-            if (__instance.gameObject.GetComponent<IVolumetricLightsController>() is IVolumetricLightsController volumetricLightsController)
+            if (__instance.gameObject.GetComponent<IVolumetricLightsController>() is { } volumetricLightsController)
             {
-                foreach (var volumetricLight in volumetricLightsController.VolumetricLights)
-                {
-                    volumetricLight.DisableVolume();
-                }
+                volumetricLightsController.DisableVolumes();
             }
         }
     }
@@ -52,12 +40,9 @@ namespace BetterLights.Patches
     {
         static void Postfix(Hoverbike __instance)
         {
-            if (__instance.gameObject.GetComponent<IVolumetricLightsController>() is IVolumetricLightsController volumetricLightsController)
+            if (__instance.gameObject.GetComponent<IVolumetricLightsController>() is { } volumetricLightsController)
             {
-                foreach (var volumetricLight in volumetricLightsController.VolumetricLights)
-                {
-                    volumetricLight.RestoreVolume();
-                }
+                volumetricLightsController.RestoreVolumes();
             }
         }
     }

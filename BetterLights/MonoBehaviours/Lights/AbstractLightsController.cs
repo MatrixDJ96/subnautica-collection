@@ -1,190 +1,140 @@
 using BetterSubnautica.Extensions;
+using BetterSubnautica.Helpers;
 using UnityEngine;
 
 namespace BetterLights.MonoBehaviours.Lights
 {
     public abstract class AbstractLightsController<T> : MonoBehaviour, ILightsController where T : Component
     {
-        protected T component = null;
+        private T component;
 
-        protected float lastColorUpdate = 0f;
-        protected float lastIntensityUpdate = 0f;
-        protected float lastRangeUpdate = 0f;
-
-        protected float[] startIntensities = null;
-        protected float[] startRanges = null;
-
-        protected Light[] lights = null;
-        public virtual Light[] Lights => lights;
-
-        protected Color color = Color.white;
-        public Color Color
+        protected T Component
         {
-            get => color;
-            set
+            get
             {
-                if (color != value)
+                if (component == null)
                 {
-                    color = value;
-                    lastColorUpdate = 0;
+                    component = gameObject.GetComponent<T>();
                 }
+
+                return component;
             }
         }
 
-        protected float intensityOffset = 0f;
-        public float IntensityOffset
-        {
-            get => intensityOffset;
-            set
-            {
-                if (intensityOffset != value)
-                {
-                    intensityOffset = value;
-                    lastIntensityUpdate = 0f;
-                }
-            }
-        }
+        public virtual Light[] Lights { get; protected set; } = [];
 
-        protected float rangeOffset = 0f;
-        public float RangeOffset
-        {
-            get => rangeOffset;
-            set
-            {
-                if (rangeOffset != value)
-                {
-                    rangeOffset = value;
-                    lastRangeUpdate = 0;
-                }
-            }
-        }
+        public virtual Color Color { get; protected set; }
 
-        public float UpdateInterval { get; set; } = 60f;
+        public virtual float IntensityOffset { get; protected set; }
+
+        public virtual float RangeOffset { get; protected set; }
+
+        protected Color[] DefaultColors { get; set; } = [];
+
+        protected float[] DefaultIntensities { get; set; } = [];
+
+        protected float[] DefaultRanges { get; set; } = [];
+
+        protected Timerwatch Timer { get; } = new(1);
 
         protected virtual void Awake()
         {
-            component = gameObject.GetComponent<T>();
-
-            if (component == null)
+            if (Component == null)
             {
                 Destroy(this);
                 return;
             }
 
-            var lightsParent = component.GetLightsParent();
-            var toggleLights = component.GetToggleLights();
-
-            if (lightsParent == null && toggleLights != null)
-            {
-                lightsParent = toggleLights.lightsParent;
-            }
-
-            if (lightsParent != null)
-            {
-                lights = lightsParent.GetComponentsInChildren<Light>(true);
-            }
+            GetLights();
         }
 
         protected virtual void Start()
         {
-            if (lights != null && lights.Length > 0)
+            if (Lights.Length == 0)
             {
-                startIntensities = new float[lights.Length];
-                startRanges = new float[lights.Length];
-
-                for (int i = 0; i < lights.Length; i++)
-                {
-                    if (lights[i] != null)
-                    {
-                        startIntensities[i] = lights[i].intensity;
-                        startRanges[i] = lights[i].range;
-                    }
-                }
+                Destroy(this);
+                return;
             }
+
+            SetDefaults();
         }
 
         protected virtual void Update()
         {
-            if (gameObject.activeInHierarchy)
+            if (!gameObject.activeInHierarchy) return;
+
+            if (Timer.IsFinished())
             {
+                GetSettings();
+
                 UpdateColor();
                 UpdateIntensity();
                 UpdateRange();
+
+                Timer.Restart();
             }
         }
 
-        protected virtual void LateUpdate()
+        protected virtual void GetLights()
         {
-            UpdateSettings();
+            if (Component.GetLightsParent() is { } lightsParent)
+            {
+                Lights = lightsParent.transform.GetLightsInChildren();
+            }
         }
 
-        protected virtual void OnDestroy()
+        protected abstract void GetSettings();
+
+        private void SetDefaults()
         {
-            //DebuggerUtility.ShowMessage($"Component: {component != null} | Lights: {lights != null}", $"({GetInstanceID()}) {GetType().Name}.Destroy");
+            DefaultColors = new Color[Lights.Length];
+            DefaultIntensities = new float[Lights.Length];
+            DefaultRanges = new float[Lights.Length];
+
+            for (var i = 0; i < Lights.Length; i++)
+            {
+                DefaultColors[i] = Lights[i].color;
+                DefaultIntensities[i] = Lights[i].intensity;
+                DefaultRanges[i] = Lights[i].range;
+            }
         }
 
         public virtual void UpdateColor()
         {
-            if (lastColorUpdate == 0 || lastColorUpdate + UpdateInterval < Time.time)
+            foreach (var light in Lights)
             {
-                if (lights != null && lights.Length > 0)
+                if (light.color != Color)
                 {
-                    for (int i = 0; i < lights.Length; i++)
-                    {
-                        if (lights[i] != null && lights[i].color != Color)
-                        {
-                            lights[i].color = Color;
-                        }
-                    }
-
-                    lastColorUpdate = Time.time;
+                    light.color = Color;
                 }
             }
         }
 
-        public virtual void UpdateIntensity()
+        public void UpdateIntensity()
         {
-            if (lastIntensityUpdate == 0 || lastIntensityUpdate + UpdateInterval < Time.time)
+            for (var i = 0; i < Lights.Length; i++)
             {
-                if (lights != null && lights.Length > 0)
+                if (!Mathf.Approximately(Lights[i].intensity, DefaultIntensities[i] + IntensityOffset))
                 {
-                    for (int i = 0; i < lights.Length; i++)
-                    {
-                        if (lights[i] != null && !Mathf.Approximately(lights[i].intensity, startIntensities[i] + IntensityOffset))
-                        {
-                            lights[i].intensity = startIntensities[i] + IntensityOffset;
-                        }
-                    }
-
-                    lastIntensityUpdate = Time.time;
+                    Lights[i].intensity = DefaultIntensities[i] + IntensityOffset;
                 }
             }
         }
 
-        public virtual void UpdateRange()
+        public void UpdateRange()
         {
-            if (lastRangeUpdate == 0 || lastRangeUpdate + UpdateInterval < Time.time)
+            for (var i = 0; i < Lights.Length; i++)
             {
-                if (lights != null && lights.Length > 0)
+                if (!Mathf.Approximately(Lights[i].range, DefaultRanges[i] + RangeOffset))
                 {
-                    for (int i = 0; i < lights.Length; i++)
+                    Lights[i].range = DefaultRanges[i] + RangeOffset;
+
+                    if (Lights[i].gameObject.GetComponent<VFXVolumetricLight>() is { } volumetricLight)
                     {
-                        if (lights[i] != null && !Mathf.Approximately(lights[i].range, startRanges[i] + RangeOffset))
-                        {
-                            lights[i].range = startRanges[i] + RangeOffset;
-
-                            if (lights[i].gameObject.GetComponent<VFXVolumetricLight>() is VFXVolumetricLight volumetricLight)
-                            {
-                                volumetricLight.UpdateScale();
-                            }
-                        }
+                        volumetricLight.UpdateScale();
                     }
-
-                    lastRangeUpdate = Time.time;
                 }
             }
         }
-
-        protected abstract void UpdateSettings();
     }
 }

@@ -1,6 +1,7 @@
 using BetterLights.MonoBehaviours.Lights;
 using BetterLights.MonoBehaviours.ToggleLights;
 using BetterLights.MonoBehaviours.VolumetricLights;
+using BetterSubnautica.Components;
 using HarmonyLib;
 
 namespace BetterLights.Patches
@@ -11,35 +12,27 @@ namespace BetterLights.Patches
     {
         static void Postfix(Exosuit __instance)
         {
-            if (__instance.gameObject.GetComponent<ExosuitLightsController>() == null)
-            {
-                __instance.gameObject.AddComponent<ExosuitLightsController>();
-            }
+            __instance.gameObject.EnsureComponent<ExosuitLightsController>();
 
-            if (__instance.gameObject.GetComponent<ExosuitToggleLightsController>() == null)
-            {
-                __instance.gameObject.AddComponent<ExosuitToggleLightsController>();
-            }
+            __instance.gameObject.EnsureComponent<ExosuitToggleLightsController>();
 
-            if (__instance.gameObject.GetComponent<ExosuitVolumetricLightsController>() == null)
-            {
-                __instance.gameObject.AddComponent<ExosuitVolumetricLightsController>();
-            }
+            __instance.gameObject.EnsureComponent<ExosuitVolumetricLightsController>();
         }
     }
 
-#if SUBNAUTICA_STABLE || BELOWZERO_STABLE
+#if BELOWZERO
     [HarmonyPatch(typeof(Exosuit))]
     [HarmonyPatch(nameof(Exosuit.SubConstructionComplete))]
 #else
     [HarmonyPatch(typeof(Vehicle))]
     [HarmonyPatch(nameof(Vehicle.SubConstructionComplete))]
 #endif
+
     class ExosuitSubConstructionCompletePatch
     {
         static void Postfix(Vehicle __instance)
         {
-            if (__instance is Exosuit && __instance.gameObject.GetComponent<IToggleLightsController>() is IToggleLightsController controller)
+            if (__instance is Exosuit && __instance.gameObject.GetComponent<IToggleLightsController>() is { } controller)
             {
                 controller.SetLightsActive(true, true);
             }
@@ -52,12 +45,9 @@ namespace BetterLights.Patches
     {
         static void Postfix(Exosuit __instance)
         {
-            if (__instance.gameObject.GetComponent<IVolumetricLightsController>() is IVolumetricLightsController controller)
+            if (__instance.gameObject.GetComponent<IVolumetricLightsController>() is { } controller)
             {
-                foreach (var volumetricLight in controller.VolumetricLights)
-                {
-                    volumetricLight.DisableVolume();
-                }
+                controller.DisableVolumes();
             }
         }
     }
@@ -68,12 +58,9 @@ namespace BetterLights.Patches
     {
         static void Postfix(Exosuit __instance)
         {
-            if (__instance.gameObject.GetComponent<IVolumetricLightsController>() is IVolumetricLightsController controller)
+            if (__instance.gameObject.GetComponent<IVolumetricLightsController>() is { } controller)
             {
-                foreach (var volumetricLight in controller.VolumetricLights)
-                {
-                    volumetricLight.RestoreVolume();
-                }
+                controller.RestoreVolumes();
             }
         }
     }

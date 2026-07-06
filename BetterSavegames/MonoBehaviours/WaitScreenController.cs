@@ -1,11 +1,29 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace BetterSavegames.MonoBehaviours
 {
     public class WaitScreenController : MonoBehaviour
     {
+        private bool waiting;
         private int frameRate;
         private int vSyncCount;
+
+        public void OnWaitingChanged(bool isWaiting)
+        {
+            if (isWaiting != waiting)
+            {
+                waiting = isWaiting;
+
+                if (waiting)
+                {
+                    UnlockFramerate();
+                }
+                else
+                {
+                    RestoreFramerate();
+                }
+            }
+        }
 
         public void UnlockFramerate()
         {
