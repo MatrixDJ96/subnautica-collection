@@ -1,4 +1,4 @@
-﻿using BetterSubnautica.Extensions;
+using BetterSubnautica.Extensions;
 using HarmonyLib;
 using System.Collections.Generic;
 

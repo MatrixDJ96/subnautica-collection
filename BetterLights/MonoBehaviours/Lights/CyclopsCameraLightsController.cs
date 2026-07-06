@@ -1,24 +1,23 @@
-﻿#if SUBNAUTICA
+#if SUBNAUTICA
 using UnityEngine;
 
 namespace BetterLights.MonoBehaviours.Lights
 {
     public class CyclopsCameraLightsController : AbstractLightsController<CyclopsExternalCams>
     {
-        protected override void Awake()
+        protected override void GetLights()
         {
-            base.Awake();
-
-            if (component != null)
+            if (Component.cameraLight != null)
             {
-                lights = new Light[] { component.cameraLight };
+                Lights = new Light[] { Component.cameraLight };
             }
         }
 
         public override void UpdateColor() { }
 
-        protected override void UpdateSettings()
+        protected override void GetSettings()
         {
+            Color = UnityEngine.Color.white;
             IntensityOffset = Core.CyclopsSettings.CameraLightsIntensityOffset;
             RangeOffset = Core.CyclopsSettings.CameraLightsRangeOffset;
         }

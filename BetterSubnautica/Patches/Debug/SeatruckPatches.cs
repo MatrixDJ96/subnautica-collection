@@ -1,4 +1,4 @@
-﻿#if BELOWZERO
+#if BELOWZERO
 using BetterSubnautica.MonoBehaviours.Debug;
 using HarmonyLib;
 
@@ -12,10 +12,7 @@ namespace BetterSubnautica.Patches.Debug
         {
             if (SeaTruckSegment.GetHead(__instance) == __instance)
             {
-                if (__instance.gameObject.GetComponent<SeatruckDebuggerController>() == null)
-                {
-                    __instance.gameObject.AddComponent<SeatruckDebuggerController>();
-                }
+                __instance.gameObject.EnsureComponent<SeatruckDebuggerController>();
             }
         }
     }

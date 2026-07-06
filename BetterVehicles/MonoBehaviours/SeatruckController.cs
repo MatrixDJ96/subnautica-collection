@@ -1,4 +1,4 @@
-﻿#if BELOWZERO
+#if BELOWZERO
 using BetterSubnautica.Extensions;
 using UnityEngine;
 using UWE;
@@ -31,7 +31,7 @@ namespace BetterVehicles.MonoBehaviours
 
         protected void Update()
         {
-            if (!Player.main.GetPDA().isInUse && FreezeTime.freezers.Count == 0)
+            if (!Player.main.GetPDA().isInUse && !FreezeTime.HasFreezers() && UWE.Utils.lockCursor)
             {
                 if (Input.GetKeyDown(Core.SeatruckSettings.ForceAction))
                 {

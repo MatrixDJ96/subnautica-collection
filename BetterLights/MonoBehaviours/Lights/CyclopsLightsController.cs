@@ -1,4 +1,4 @@
-﻿#if SUBNAUTICA
+#if SUBNAUTICA
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,38 +6,27 @@ namespace BetterLights.MonoBehaviours.Lights
 {
     public class CyclopsLightsController : AbstractLightsController<SubRoot>
     {
-        private CyclopsLightingPanel additionalComponent = null;
-
-        protected override void Awake()
+        protected override void GetLights()
         {
-            base.Awake();
-
-            if (component != null)
+            if (Component.isCyclops && Component.gameObject.GetComponentInChildren<CyclopsLightingPanel>() is { } lightingPanel && lightingPanel.floodlightsHolder != null)
             {
-                additionalComponent = component.gameObject.GetComponentInChildren<CyclopsLightingPanel>();
-
-                if (!component.isCyclops || additionalComponent == null || additionalComponent.floodlightsHolder == null)
-                {
-                    Destroy(this);
-                    return;
-                }
-
                 var cyclopsLights = new List<Light>();
 
-                foreach (Transform item in additionalComponent.floodlightsHolder.transform)
+                foreach (Transform item in lightingPanel.floodlightsHolder.transform)
                 {
-                    if (item.gameObject.GetComponent<Light>() is Light light)
+                    if (item.gameObject.GetComponent<Light>() is { } light)
                     {
                         cyclopsLights.Add(light);
                     }
                 }
 
-                lights = cyclopsLights.ToArray();
+                Lights = cyclopsLights.ToArray();
             }
         }
 
-        protected override void UpdateSettings()
+        protected override void GetSettings()
         {
+            Color = UnityEngine.Color.white;
             IntensityOffset = Core.CyclopsSettings.ExternalLightsIntensityOffset;
             RangeOffset = Core.CyclopsSettings.ExternalLightsRangeOffset;
         }

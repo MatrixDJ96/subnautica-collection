@@ -1,6 +1,6 @@
-﻿#if SUBNAUTICA
-using SMLHelper.V2.Json;
-using SMLHelper.V2.Options.Attributes;
+#if SUBNAUTICA
+using Nautilus.Json;
+using Nautilus.Options.Attributes;
 using UnityEngine;
 
 namespace BetterLights.Settings
@@ -12,6 +12,9 @@ namespace BetterLights.Settings
 
         [Keybind("Lights Button Toggle")]
         public KeyCode LightsButtonToggle { get; set; } = KeyCode.Mouse1;
+
+        [ColorPicker("Lights Color", Advanced = true)]
+        public Color LightsColor { get; set; } = Color.white;
 
         [Slider("Lights Consumption", 0f, 0.2f, Step = 0.001f, Format = "{0:F3}")]
         public float LightsConsumption { get; set; } = 0.033f;

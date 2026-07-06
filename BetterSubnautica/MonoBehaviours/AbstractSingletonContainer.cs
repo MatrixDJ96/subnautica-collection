@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BetterSubnautica.MonoBehaviours
@@ -14,11 +14,13 @@ namespace BetterSubnautica.MonoBehaviours
         {
             if (lastUpdate == 0 || lastUpdate + updateInterval < Time.time)
             {
-                foreach (var item in Dict)
+                foreach (var key in new List<Key>(Dict.Keys))
                 {
-                    if (item.Value == null)
+                    var value = Dict[key];
+
+                    if (value is Object unityObject ? unityObject == null : value == null)
                     {
-                        Dict.Remove(item.Key);
+                        Dict.Remove(key);
                     }
                 }
 

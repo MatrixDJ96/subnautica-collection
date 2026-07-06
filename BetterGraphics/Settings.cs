@@ -1,7 +1,6 @@
 using BetterSubnautica.Utility;
-using SMLHelper.V2.Json;
-using SMLHelper.V2.Options.Attributes;
-using System;
+using Nautilus.Json;
+using Nautilus.Options.Attributes;
 using UnityEngine;
 using FullScreenModeEnum = UnityEngine.FullScreenMode;
 

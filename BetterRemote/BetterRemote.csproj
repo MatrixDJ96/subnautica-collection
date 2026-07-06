@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>BetterRemote</RootNamespace>
+        <AssemblyName>BetterRemote</AssemblyName>
+    </PropertyGroup>
+
+</Project>

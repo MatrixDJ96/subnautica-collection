@@ -1,4 +1,4 @@
-﻿using BetterSubnautica.MonoBehaviours.Debug;
+using BetterSubnautica.MonoBehaviours;
 
 namespace BetterSubnautica.Utility
 {
@@ -14,19 +14,9 @@ namespace BetterSubnautica.Utility
             DebuggerController.Instance.AddMessage(text, key, prefix);
         }
 
-        public static void WriteMessage(string text, string key = null, bool prefix = true)
-        {
-            DebuggerController.Instance.WriteMessage(text, key, prefix);
-        }
-
         public static void RemoveMessage(string key)
         {
             DebuggerController.Instance.RemoveMessage(key);
-        }
-
-        public static void ClearMessages()
-        {
-            DebuggerController.Instance.ClearMessages();
         }
     }
 }

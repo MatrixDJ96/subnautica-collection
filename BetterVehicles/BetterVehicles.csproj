@@ -1,55 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <Import Project="$(SolutionDir)Common.props" />
-  <PropertyGroup>
-    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
-    <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
-    <ProjectGuid>{6D38AD35-CA01-40EA-9946-53CD36227732}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BetterVehicles</RootNamespace>
-    <AssemblyName>BetterVehicles</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-  </PropertyGroup>
-  <Import Project="$(SolutionDir)References.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\BetterSubnautica\BetterSubnautica.csproj">
-      <Project>{b6665795-a64e-4401-bc3f-5abfc3adb20e}</Project>
-      <Name>BetterSubnautica</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="mod.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Core.cs" />
-    <Compile Include="MonoBehaviours\AbstractVehicleController.cs" />
-    <Compile Include="MonoBehaviours\ExosuitStorageController.cs" />
-    <Compile Include="MonoBehaviours\SeamothStorageController.cs" />
-    <Compile Include="MonoBehaviours\SeatruckController.cs" />
-    <Compile Include="MonoBehaviours\SubRootContainer.cs" />
-    <Compile Include="Patches\BaseUpgradeConsoleGeometryPatches.cs" />
-    <Compile Include="Patches\CyclopsPatches.cs" />
-    <Compile Include="Patches\ExosuitPatches.cs" />
-    <Compile Include="Patches\PDAPatches.cs" />
-    <Compile Include="Patches\SeaglidePatches.cs" />
-    <Compile Include="Patches\SeamothPatches.cs" />
-    <Compile Include="Patches\SeatruckPatches.cs" />
-    <Compile Include="Patches\SubRootPatches.cs" />
-    <Compile Include="Patches\VehicleDockingBayPatches.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings\CyclopsSettings.cs" />
-    <Compile Include="Settings\GlobalSettings.cs" />
-    <Compile Include="Settings\SeatruckSettings.cs" />
-  </ItemGroup>
-  <Import Project="$(SolutionDir)Constants.props" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)Builds.targets" />
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>BetterVehicles</RootNamespace>
+        <AssemblyName>BetterVehicles</AssemblyName>
+    </PropertyGroup>
+
 </Project>

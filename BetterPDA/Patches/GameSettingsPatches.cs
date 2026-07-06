@@ -1,4 +1,3 @@
-﻿#if !SUBNAUTICA_STABLE
 using HarmonyLib;
 
 namespace BetterPDA.Patches
@@ -7,10 +6,9 @@ namespace BetterPDA.Patches
     [HarmonyPatch(nameof(GameSettings.SerializeSettings))]
     class GameSettingsSerializeSettingsPatch
     {
-        static void Prefix(GameSettings __instance, GameSettings.ISerializer serializer)
+        static void Prefix()
         {
             MiscSettings.pdaPause = Core.Settings.EnablePDAPause;
         }
     }
 }
-#endif

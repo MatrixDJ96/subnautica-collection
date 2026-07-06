@@ -1,16 +1,21 @@
-﻿using SMLHelper.V2.Json;
-using SMLHelper.V2.Options.Attributes;
+using Nautilus.Json;
+using Nautilus.Options.Attributes;
 using UnityEngine;
 
 namespace BetterLights.Settings
 {
-    [Menu("Better Lights - Map room camera")]
+    [Menu("Better Lights - Map Room Camera")]
     public class MapRoomCameraSettings : ConfigFile
     {
         public MapRoomCameraSettings() : base("config_map_room_camera") { }
 
+#if SUBNAUTICA
         [Keybind("Lights Button Toggle")]
+#endif
         public KeyCode LightsButtonToggle { get; set; } = KeyCode.Mouse1;
+
+        [ColorPicker("Lights Color", Advanced = true)]
+        public Color LightsColor { get; set; } = Color.white;
 
         [Slider("Lights Consumption", 0f, 0.2f, Step = 0.001f, Format = "{0:F3}")]
         public float LightsConsumption { get; set; } = 0.033f;

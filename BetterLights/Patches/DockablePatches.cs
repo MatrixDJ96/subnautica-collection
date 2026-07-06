@@ -1,5 +1,5 @@
 #if BELOWZERO
-using BetterLights.MonoBehaviours.ToggleLights;
+using BetterSubnautica.Components;
 using HarmonyLib;
 
 namespace BetterLights.Patches
@@ -10,7 +10,7 @@ namespace BetterLights.Patches
     {
         static void Prefix(Dockable __instance)
         {
-            if (__instance.gameObject.GetComponent<IToggleLightsController>() is IToggleLightsController controller)
+            if (__instance.gameObject.GetComponent<IToggleLightsController>() is { } controller)
             {
                 controller.SetLightsActive(false, true);
             }
@@ -19,11 +19,11 @@ namespace BetterLights.Patches
 
     [HarmonyPatch(typeof(Dockable))]
     [HarmonyPatch(nameof(Dockable.OnUndockingComplete))]
-    class DockableOnUndockingStartPatch
+    class DockableOnUndockingCompletePatch
     {
         static void Prefix(Dockable __instance)
         {
-            if (__instance.gameObject.GetComponent<IToggleLightsController>() is IToggleLightsController controller)
+            if (__instance.gameObject.GetComponent<IToggleLightsController>() is { } controller)
             {
                 controller.SetLightsActive(Core.VehiclesSettings.EnableLightsOnUndocking, true);
             }

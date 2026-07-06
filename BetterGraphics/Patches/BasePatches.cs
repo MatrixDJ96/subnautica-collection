@@ -1,29 +1,9 @@
-﻿#if BELOWZERO
-using BetterSubnautica.Extensions;
+#if BELOWZERO
 using HarmonyLib;
 using UnityEngine;
 
 namespace BetterGraphics.Patches
 {
-    [HarmonyPatch(typeof(Base))]
-    [HarmonyPatch(nameof(Base.UpdateSkyAppliers))]
-    class BaseUpdateSkyAppliersPatch
-    {
-        static bool Prefix(Base __instance)
-        {
-            foreach (var component in __instance.gameObject.GetComponentsInChildren<SkyApplier>())
-            {
-                // Send environment only to objects inside base
-                if (component != null && __instance.GetCellIndex(component.transform.position) > -1)
-                {
-                    SkyEnvironmentChanged.Send(component.gameObject, __instance);
-                }
-            }
-
-            return false;
-        }
-    }
-
     [HarmonyPatch(typeof(Base))]
     [HarmonyPatch(nameof(Base.RebuildGeometry))]
     class BaseRebuildGeometryPatch
@@ -32,7 +12,7 @@ namespace BetterGraphics.Patches
         {
             foreach (var component in __instance.gameObject.GetComponentsInChildren<Transform>())
             {
-                if (component != null && component.gameObject.name == "Large_Aquarium_02_glass")
+                if (component != null && component.gameObject.name.StartsWith("Large_Aquarium") && component.gameObject.name.Contains("glass"))
                 {
                     if (component.gameObject.GetComponent<MeshRenderer>() is MeshRenderer renderer)
                     {

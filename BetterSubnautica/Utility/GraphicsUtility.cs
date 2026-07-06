@@ -1,4 +1,4 @@
-﻿namespace BetterSubnautica.Utility
+namespace BetterSubnautica.Utility
 {
     public static class GraphicsUtility
     {

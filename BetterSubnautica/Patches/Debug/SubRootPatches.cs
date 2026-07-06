@@ -1,4 +1,4 @@
-﻿using BetterSubnautica.MonoBehaviours.Debug;
+using BetterSubnautica.MonoBehaviours.Debug;
 using HarmonyLib;
 
 namespace BetterSubnautica.Patches.Debug
@@ -11,10 +11,7 @@ namespace BetterSubnautica.Patches.Debug
         {
             if (!__instance.isCyclops)
             {
-                if (__instance.gameObject.GetComponent<SubRootDebuggerController>() == null)
-                {
-                    __instance.gameObject.AddComponent<SubRootDebuggerController>();
-                }
+                __instance.gameObject.EnsureComponent<SubRootDebuggerController>();
             }
         }
     }

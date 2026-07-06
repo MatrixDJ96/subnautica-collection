@@ -1,7 +1,8 @@
-﻿#if SUBNAUTICA
+#if SUBNAUTICA
 using BetterLights.MonoBehaviours.Lights;
 using BetterLights.MonoBehaviours.ToggleLights;
 using BetterLights.MonoBehaviours.VolumetricLights;
+using BetterSubnautica.Components;
 using HarmonyLib;
 
 namespace BetterLights.Patches
@@ -12,20 +13,11 @@ namespace BetterLights.Patches
     {
         static void Postfix(SeaMoth __instance)
         {
-            if (__instance.gameObject.GetComponent<SeamothLightsController>() == null)
-            {
-                __instance.gameObject.AddComponent<SeamothLightsController>();
-            }
+            __instance.gameObject.EnsureComponent<SeamothLightsController>();
 
-            if (__instance.gameObject.GetComponent<SeamothToggleLightsController>() == null)
-            {
-                __instance.gameObject.AddComponent<SeamothToggleLightsController>();
-            }
+            __instance.gameObject.EnsureComponent<SeamothToggleLightsController>();
 
-            if (__instance.gameObject.GetComponent<SeamothVolumetricLightsController>() == null)
-            {
-                __instance.gameObject.AddComponent<SeamothVolumetricLightsController>();
-            }
+            __instance.gameObject.EnsureComponent<SeamothVolumetricLightsController>();
         }
     }
 
@@ -35,7 +27,10 @@ namespace BetterLights.Patches
     {
         static void Postfix(SeaMoth __instance)
         {
-            if (__instance.gameObject.GetComponent<IToggleLightsController>() is IToggleLightsController toggleLightsController)
+            // During the construction animation the light children are inactive, so the
+            // controller added by the Start patch destroys itself: re-ensure it now that
+            // the vehicle is complete.
+            if (__instance.gameObject.EnsureComponent<SeamothToggleLightsController>() is { } toggleLightsController)
             {
                 toggleLightsController.SetLightsActive(true, true);
             }

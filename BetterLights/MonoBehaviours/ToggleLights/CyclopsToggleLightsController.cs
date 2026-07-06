@@ -1,12 +1,12 @@
-﻿#if SUBNAUTICA
+#if SUBNAUTICA
 using BetterSubnautica.Extensions;
 
 namespace BetterLights.MonoBehaviours.ToggleLights
 {
     public class CyclopsToggleLightsController : AbstractToggleLightsController<SubRoot>
     {
-        protected override bool MandatoryLightsParent => false;
-        protected override bool MandatoryToggleLights => false;
+        protected override bool MandatoryToggleLights { get; } = false;
+        protected override bool MandatoryLightsParent { get; } = false;
 
         private CyclopsLightingPanel lightingPanel = null;
         private CyclopsExternalCams externalCams = null;
@@ -29,7 +29,7 @@ namespace BetterLights.MonoBehaviours.ToggleLights
                         energyPerSecond += Core.CyclopsSettings.InternalLightsConsumption / 2;
                     }
                 }
-                if (externalCams.GetUsingCameras())
+                if (externalCams.GetActive())
                 {
                     switch (externalCams.GetLightState())
                     {
@@ -52,7 +52,7 @@ namespace BetterLights.MonoBehaviours.ToggleLights
             }
         }
 
-        public override bool LightsActive => lightsActive = externalCams.GetUsingCameras() || lightingPanel.lightingOn || lightingPanel.floodlightsOn;
+        public override bool LightsActive => lightsActive = externalCams.GetActive() || lightingPanel.lightingOn || lightingPanel.floodlightsOn;
 
         protected override void Awake()
         {
@@ -93,11 +93,6 @@ namespace BetterLights.MonoBehaviours.ToggleLights
             // External lights
             lightingPanel.floodlightsOn = active;
             lightingPanel.SetExternalLighting(active);
-
-            if (Player.main.currentSub == component)
-            {
-
-            }
 
             // Buttons status
             lightingPanel.UpdateLightingButtons();

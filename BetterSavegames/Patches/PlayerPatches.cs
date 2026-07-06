@@ -1,4 +1,4 @@
-﻿using BetterSavegames.MonoBehaviours;
+using BetterSavegames.MonoBehaviours;
 using HarmonyLib;
 
 namespace BetterSavegames.Patches
@@ -9,10 +9,7 @@ namespace BetterSavegames.Patches
     {
         static void Postfix(Player __instance)
         {
-            if (__instance.gameObject.GetComponent<SavegameController>() == null)
-            {
-                __instance.gameObject.AddComponent<SavegameController>();
-            }
+            __instance.gameObject.EnsureComponent<SavegameController>();
         }
     }
 }

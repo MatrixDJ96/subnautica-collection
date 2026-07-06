@@ -1,4 +1,4 @@
-﻿namespace BetterSubnautica.Extensions
+namespace BetterSubnautica.Extensions
 {
     public static class IntExtensions
     {

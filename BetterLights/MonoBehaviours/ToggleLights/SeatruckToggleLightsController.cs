@@ -36,7 +36,22 @@ namespace BetterLights.MonoBehaviours.ToggleLights
                 onSound = seaTruckLights.onSound;
                 offSound = seaTruckLights.offSound;
 
+                // botbenson applies the multiplayer SeaTruck light sync onto the vanilla SeaTruckLights at
+                // entity spawn, before the SeaTruckSegment.Start hook attaches this controller. Adopt that
+                // state so Start does not reset the received lights back to off.
+                lightsActive = seaTruckLights.lightsActive;
+
                 SeatruckLightsContainer.Instance.Dict[seaTruckLights.GetInstanceID()] = this;
+            }
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            if (seaTruckLights != null)
+            {
+                SeatruckLightsContainer.Instance.Dict.Remove(seaTruckLights.GetInstanceID());
             }
         }
 

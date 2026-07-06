@@ -1,4 +1,4 @@
-﻿#if BELOWZERO
+#if BELOWZERO
 using UnityEngine;
 
 namespace BetterLights.MonoBehaviours.ToggleLights

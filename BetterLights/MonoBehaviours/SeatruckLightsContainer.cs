@@ -1,5 +1,5 @@
-﻿#if BELOWZERO
-using BetterLights.MonoBehaviours.ToggleLights;
+#if BELOWZERO
+using BetterSubnautica.Components;
 using BetterSubnautica.MonoBehaviours;
 
 namespace BetterLights.MonoBehaviours

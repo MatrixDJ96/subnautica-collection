@@ -1,6 +1,7 @@
-﻿using BetterLights.MonoBehaviours.Lights;
+using BetterLights.MonoBehaviours.Lights;
 using BetterLights.MonoBehaviours.ToggleLights;
 using BetterLights.MonoBehaviours.VolumetricLights;
+using BetterSubnautica.Components;
 using HarmonyLib;
 
 namespace BetterLights.Patches
@@ -11,20 +12,11 @@ namespace BetterLights.Patches
     {
         static void Postfix(MapRoomCamera __instance)
         {
-            if (__instance.gameObject.GetComponent<MapRoomCameraLightsController>() == null)
-            {
-                __instance.gameObject.AddComponent<MapRoomCameraLightsController>();
-            }
+            __instance.gameObject.EnsureComponent<MapRoomCameraLightsController>();
 
-            if (__instance.gameObject.GetComponent<MapRoomCameraToggleLightsController>() == null)
-            {
-                __instance.gameObject.AddComponent<MapRoomCameraToggleLightsController>();
-            }
+            __instance.gameObject.EnsureComponent<MapRoomCameraToggleLightsController>();
 
-            if (__instance.gameObject.GetComponent<MapRoomCameraVolumetricLightsController>() == null)
-            {
-                __instance.gameObject.AddComponent<MapRoomCameraVolumetricLightsController>();
-            }
+            __instance.gameObject.EnsureComponent<MapRoomCameraVolumetricLightsController>();
         }
     }
 
@@ -32,19 +24,20 @@ namespace BetterLights.Patches
     [HarmonyPatch(nameof(MapRoomCamera.ControlCamera))]
     class MapRoomCameraControlCameraPatch
     {
+#if BELOWZERO
         static void Postfix(MapRoomCamera __instance, Player player, MapRoomScreen screen)
+#else
+        static void Postfix(MapRoomCamera __instance, MapRoomScreen screen)
+#endif
         {
-            if (__instance.gameObject.GetComponent<IToggleLightsController>() is IToggleLightsController toggleLightsController)
+            if (__instance.gameObject.GetComponent<IToggleLightsController>() is { } toggleLightsController)
             {
                 toggleLightsController.SetLightsActive(toggleLightsController.LightsActive);
             }
 
-            if (__instance.gameObject.GetComponent<IVolumetricLightsController>() is IVolumetricLightsController volumetricLightsController)
+            if (__instance.gameObject.GetComponent<IVolumetricLightsController>() is { } volumetricLightsController)
             {
-                foreach (var volumetricLight in volumetricLightsController.VolumetricLights)
-                {
-                    volumetricLight.DisableVolume();
-                }
+                volumetricLightsController.DisableVolumes();
             }
         }
     }
@@ -55,17 +48,14 @@ namespace BetterLights.Patches
     {
         static void Postfix(MapRoomCamera __instance)
         {
-            if (__instance.gameObject.GetComponent<IToggleLightsController>() is IToggleLightsController toggleLightsController)
+            if (__instance.gameObject.GetComponent<IToggleLightsController>() is { } toggleLightsController)
             {
-                toggleLightsController.SetLightsActive(__instance.dockingPoint == null ? toggleLightsController.LightsActive : false);
+                toggleLightsController.SetLightsActive(__instance.dockingPoint == null && toggleLightsController.LightsActive);
             }
 
-            if (__instance.gameObject.GetComponent<IVolumetricLightsController>() is IVolumetricLightsController volumetricLightsController)
+            if (__instance.gameObject.GetComponent<IVolumetricLightsController>() is { } volumetricLightsController)
             {
-                foreach (var volumetricLight in volumetricLightsController.VolumetricLights)
-                {
-                    volumetricLight.RestoreVolume();
-                }
+                volumetricLightsController.RestoreVolumes();
             }
         }
     }
