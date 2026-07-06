@@ -1,5 +1,7 @@
-﻿#if BELOWZERO
+#if BELOWZERO
+using System.Collections;
 using BetterSubnautica.Extensions;
+using UnityEngine;
 
 namespace BetterLights.MonoBehaviours.VolumetricLights
 {
@@ -15,14 +17,24 @@ namespace BetterLights.MonoBehaviours.VolumetricLights
             {
                 additionalComponent = component.gameObject.GetComponent<SeaTruckLights>();
 
-                if (!component.IsMainSegment() || additionalComponent == null || additionalComponent.dimFloodlightsOnEnter == null)
+                if (!component.IsMainSegment() || additionalComponent == null || additionalComponent.floodLight == null)
                 {
                     Destroy(this);
                     return;
                 }
 
-                volumetricLights = additionalComponent.dimFloodlightsOnEnter;
+                StartCoroutine(CreateSeatruckVolumetricLightsAsync());
             }
+        }
+
+        // The vanilla BZ Seatruck ships bare headlights (dimFloodlightsOnEnter is empty):
+        // clone cones onto the floodlight Lights, then hand them to SeaTruckLights so the
+        // vanilla dim-on-enter path drives them.
+        private IEnumerator CreateSeatruckVolumetricLightsAsync()
+        {
+            yield return CreateVolumetricLightsAsync(additionalComponent.floodLight.GetComponentsInChildren<Light>(true));
+
+            additionalComponent.dimFloodlightsOnEnter = VolumetricLights;
         }
 
         protected override void UpdateSettings()

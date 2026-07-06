@@ -1,16 +1,18 @@
-﻿using BetterSubnautica.Enums;
+using BetterSubnautica.Components;
+using BetterSubnautica.Enums;
+using BetterSubnautica.Extensions;
 using BetterSubnautica.Utility;
 using UnityEngine;
 
 namespace BetterSubnautica.MonoBehaviours.Debug
 {
-    public abstract partial class AbstractDebuggerController<T> : MonoBehaviour where T : Component
+    public abstract class AbstractDebuggerController<T> : MonoBehaviour where T : Component
     {
-        private bool lastEnabled = false;
+        private bool lastEnabled;
         public abstract bool ShowDebugInfo { get; }
 
         private T component;
-        protected virtual T Component
+        protected T Component
         {
             get
             {
@@ -27,12 +29,12 @@ namespace BetterSubnautica.MonoBehaviours.Debug
         protected abstract LightsType LightsType { get; }
         protected abstract bool LightsActive { get; }
 
-        private float energyPerSecond = 0f;
-        protected virtual float EnergyPerSecond
+        private float energyPerSecond;
+        protected float EnergyPerSecond
         {
             get
             {
-                if (energyPerSecond > -0.0001f && energyPerSecond < 0.0001f)
+                if (energyPerSecond is > -0.0001f and < 0.0001f)
                 {
                     energyPerSecond = 0f;
                 }
@@ -41,15 +43,51 @@ namespace BetterSubnautica.MonoBehaviours.Debug
             set => energyPerSecond = value;
         }
 
-        protected virtual float LastCapacity { get; set; } = 0f;
-        protected abstract float Capacity { get; }
+        private IEnergySource energySource;
+        protected IEnergySource EnergySource
+        {
+            get
+            {
+                if (energySource == null && Component != null)
+                {
+                    energySource = Component.GetEnergySource();
+                }
+                return energySource;
+            }
+        }
 
-        protected virtual float LastCharge { get; set; } = 0f;
-        protected abstract float Charge { get; }
+        protected virtual float Capacity
+        {
+            get
+            {
+                if (EnergySource == null)
+                {
+                    return 0f;
+                }
 
-        protected virtual float LastUpdate { get; set; } = 0f;
+                EnergySource.GetValues(out _, out var capacity);
+                return capacity;
+            }
+        }
 
-        protected virtual float PercentCharge => (Charge * 100) / Capacity;
+        protected float LastCharge { get; set; }
+        protected virtual float Charge
+        {
+            get
+            {
+                if (EnergySource == null)
+                {
+                    return 0f;
+                }
+
+                EnergySource.GetValues(out var charge, out _);
+                return charge;
+            }
+        }
+
+        protected float LastUpdate { get; set; }
+
+        protected float PercentCharge => Capacity > 0f ? (Charge * 100) / Capacity : 0f;
 
         protected virtual void OnDisable()
         {
@@ -87,7 +125,7 @@ namespace BetterSubnautica.MonoBehaviours.Debug
             }
             else
             {
-                if (lastEnabled != showDebugInfo)
+                if (lastEnabled)
                 {
                     DeleteMessages();
                 }
@@ -104,7 +142,6 @@ namespace BetterSubnautica.MonoBehaviours.Debug
             }
 
             LastCharge = Charge;
-            LastCapacity = Capacity;
             LastUpdate = Time.time;
         }
 

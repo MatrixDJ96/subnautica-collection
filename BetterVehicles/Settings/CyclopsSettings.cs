@@ -1,6 +1,6 @@
-﻿#if SUBNAUTICA
-using SMLHelper.V2.Json;
-using SMLHelper.V2.Options.Attributes;
+#if SUBNAUTICA
+using Nautilus.Json;
+using Nautilus.Options.Attributes;
 
 namespace BetterVehicles.Settings
 {

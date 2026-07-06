@@ -1,12 +1,12 @@
-﻿using BetterLights.MonoBehaviours;
-using HarmonyLib;
 using System;
+using BetterLights.MonoBehaviours;
+using HarmonyLib;
 using UnityEngine;
 
 namespace BetterLights.Patches
 {
     [HarmonyPatch(typeof(VFXVolumetricLight))]
-    [HarmonyPatch(nameof(VFXVolumetricLight.UpdateMaterial), new[] { typeof(bool) })]
+    [HarmonyPatch(nameof(VFXVolumetricLight.UpdateMaterial), typeof(bool))]
     class VFXVolumetricLightUpdateMaterialPatch
     {
         static bool Prefix(VFXVolumetricLight __instance, bool forceUpdate)

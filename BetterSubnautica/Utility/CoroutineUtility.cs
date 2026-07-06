@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Collections;
-using System.Diagnostics;
 using UnityEngine;
 
 namespace BetterSubnautica.Utility
@@ -15,23 +14,6 @@ namespace BetterSubnautica.Utility
             {
                 action.Invoke();
             }
-        }
-
-        public static IEnumerator WaitForSeconds(int seconds, Action action = null)
-        {
-            yield return new WaitForSeconds(seconds);
-
-            if (action != null)
-            {
-                action.Invoke();
-            }
-        }
-
-        public static IEnumerator WaitForMilliseconds(int milliseconds, Action action = null)
-        {
-            var stopwatch = Stopwatch.StartNew();
-
-            yield return WaitUntil(() => stopwatch.Elapsed.Milliseconds >= milliseconds, action);
         }
     }
 }

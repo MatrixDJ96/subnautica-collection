@@ -1,4 +1,4 @@
-﻿#if BELOWZERO
+#if BELOWZERO
 using UnityEngine;
 
 namespace BetterLights.MonoBehaviours.ToggleLights
@@ -7,7 +7,7 @@ namespace BetterLights.MonoBehaviours.ToggleLights
     {
         protected override bool KeyDown => Input.GetKeyDown(Core.FlashlightHelmetSettings.LightsButtonToggle);
 
-        protected override float EnergyConsumption => 0f; // Core.FlashlightHelmetSettings.LightsConsumption
+        protected override float EnergyConsumption => 0f; // vanilla parity: the FlashlightHelmet prefab ships ToggleLights.energyPerSecond = 0
 
         public override bool CanToggleLightsActive()
         {

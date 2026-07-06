@@ -1,4 +1,4 @@
-﻿using BetterSubnautica.Utility;
+using BetterSubnautica.Utility;
 using HarmonyLib;
 
 namespace BetterSubnautica.Patches
@@ -20,6 +20,7 @@ namespace BetterSubnautica.Patches
                 case "Graphics":
                     uGUIUtility.GraphicsTabIndex = __result;
                     break;
+                case "Input":
                 case "Keyboard":
                     uGUIUtility.KeyboardTabIndex = __result;
                     break;

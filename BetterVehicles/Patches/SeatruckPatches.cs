@@ -1,4 +1,4 @@
-﻿#if BELOWZERO
+#if BELOWZERO
 using BetterSubnautica.Extensions;
 using BetterVehicles.MonoBehaviours;
 using HarmonyLib;
@@ -13,10 +13,7 @@ namespace BetterVehicles.Patches
         {
             if (__instance.IsMainSegment())
             {
-                if (__instance.gameObject.GetComponent<SeatruckController>() == null)
-                {
-                    __instance.gameObject.AddComponent<SeatruckController>();
-                }
+                __instance.gameObject.EnsureComponent<SeatruckController>();
             }
         }
     }

@@ -1,35 +1,9 @@
-﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-// Le informazioni generali relative a un assembly sono controllate dal seguente 
-// set di attributi. Modificare i valori di questi attributi per modificare le informazioni
-// associate a un assembly.
-[assembly: AssemblyTitle("Better Vehicles")]
-[assembly: AssemblyDescription("Better Vehicles")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("MatrixDJ96")]
-[assembly: AssemblyProduct("Better Vehicles")]
-[assembly: AssemblyCopyright("Copyright © 2022")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-
-// Se si imposta ComVisible su false, i tipi in questo assembly non saranno visibili
-// ai componenti COM. Se è necessario accedere a un tipo in questo assembly da
-// COM, impostare su true l'attributo ComVisible per tale tipo.
+// Setting ComVisible to false makes the types in this assembly not visible
+// to COM components.  If you need to access a type in this assembly from
+// COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
-// Se il progetto viene esposto a COM, il GUID seguente verrà utilizzato come ID della libreria dei tipi
+// The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("c1fa4c2f-d045-4790-a75d-559cfb602a39")]
-
-// Le informazioni sulla versione di un assembly sono costituite dai seguenti quattro valori:
-//
-//      Versione principale
-//      Versione secondaria
-//      Numero di build
-//      Revisione
-//
-// È possibile specificare tutti i valori oppure impostare valori predefiniti per i numeri relativi alla revisione e alla build
-// usando l'asterisco '*' come illustrato di seguito:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.0.3.6")]
-[assembly: AssemblyFileVersion("0.0.3.6")]

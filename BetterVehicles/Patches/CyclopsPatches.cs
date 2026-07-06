@@ -1,13 +1,13 @@
-﻿#if SUBNAUTICA
+#if SUBNAUTICA
 using HarmonyLib;
 
 namespace BetterVehicles.Patches
 {
     [HarmonyPatch(typeof(CyclopsCameraInput))]
-    [HarmonyPatch(nameof(CyclopsCameraInput.Update))]
-    class CyclopsCameraInputUpdatePatch
+    [HarmonyPatch(nameof(CyclopsCameraInput.HandleInput))]
+    class CyclopsCameraInputHandleInputPatch
     {
-        static void Postfix(CyclopsCameraInput __instance)
+        static void Prefix(CyclopsCameraInput __instance)
         {
             if (__instance.rotationSpeedDamper != Core.CyclopsSettings.CameraRotationSpeedDamper)
             {

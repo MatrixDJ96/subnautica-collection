@@ -1,11 +1,11 @@
-﻿using BetterQuickSlots.Utility;
+using BetterQuickSlots.Utility;
 using BetterSubnautica.Utility;
 using HarmonyLib;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BetterSubnautica.Patches
+namespace BetterQuickSlots.Patches
 {
     [HarmonyPatch(typeof(TooltipFactory))]
     [HarmonyPatch(nameof(TooltipFactory.RefreshActionStrings))]
@@ -13,7 +13,7 @@ namespace BetterSubnautica.Patches
     {
         static void Postfix()
         {
-            if (uGUI.main != null && uGUI.main.quickSlots is uGUI_QuickSlots __instance)
+            if (uGUI.main != null && uGUI.main.quickSlots is { } __instance)
             {
                 __instance.StartCoroutine(UpdateKeyRangeCoroutine(__instance));
             }

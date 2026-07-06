@@ -1,7 +1,6 @@
-﻿using BetterVehicles.MonoBehaviours;
-using SMLHelper.V2.Json;
-using SMLHelper.V2.Options.Attributes;
-using System;
+using BetterVehicles.MonoBehaviours;
+using Nautilus.Json;
+using Nautilus.Options.Attributes;
 using UnityEngine;
 
 namespace BetterVehicles.Settings
@@ -17,13 +16,19 @@ namespace BetterVehicles.Settings
         [Toggle("Linked Storage", Tooltip = "Link personal inventory with vehicle storage")]
         public bool LinkedStorage { get; set; } = false;
 
+#if SUBNAUTICA
         [Keybind("Upgrade Modules Button")]
+#endif
         public KeyCode UpgradeModules { get; set; } = KeyCode.U;
 
+#if SUBNAUTICA
         [Keybind("Torpedo Storage Button")]
+#endif
         public KeyCode TorpedoStorage { get; set; } = KeyCode.T;
 
+#if SUBNAUTICA
         [Keybind("Vehicle Storage Button")]
+#endif
         public KeyCode VehicleStorage { get; set; } = KeyCode.V;
 
         private void AutomaticVehicleRepairEvent()

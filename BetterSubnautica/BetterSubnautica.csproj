@@ -1,87 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <Import Project="$(SolutionDir)Common.props" />
-  <PropertyGroup>
-    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
-    <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
-    <ProjectGuid>{B6665795-A64E-4401-BC3F-5ABFC3ADB20E}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BetterSubnautica</RootNamespace>
-    <AssemblyName>BetterSubnautica</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-  </PropertyGroup>
-  <Import Project="$(SolutionDir)References.targets" />
-  <ItemGroup>
-    <None Include="mod.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Attributes\PostPatchAttribute.cs" />
-    <Compile Include="Attributes\PrePatchAttribute.cs" />
-    <Compile Include="Components\AbstractEnergySource.cs" />
-    <Compile Include="Components\EnergyInterfaceSource.cs" />
-    <Compile Include="Components\EnergyMixinSource.cs" />
-    <Compile Include="Components\IEnergySource.cs" />
-    <Compile Include="Components\PowerRelaySource.cs" />
-    <Compile Include="Core.cs" />
-    <Compile Include="Enums\CopyType.cs" />
-    <Compile Include="Enums\LightsType.cs" />
-    <Compile Include="Extensions\BaseExtensions.cs" />
-    <Compile Include="Extensions\ComponentExtensions.cs" />
-    <Compile Include="Extensions\CyclopsExternalCamsExtensions.cs" />
-    <Compile Include="Extensions\DockableExtensions.cs" />
-    <Compile Include="Extensions\IntExtensions.cs" />
-    <Compile Include="Extensions\PatchClassProcessorExtensions.cs" />
-    <Compile Include="Extensions\SeaTruckSegmentExtensions.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Extensions\VehicleExtensions.cs" />
-    <Compile Include="Extensions\VFXVolumetricLightExtensions.cs" />
-    <Compile Include="MonoBehaviours\AbstractAwakeSingleton.cs" />
-    <Compile Include="MonoBehaviours\AbstractGenericSingleton.cs" />
-    <Compile Include="MonoBehaviours\AbstractSingletonContainer.cs" />
-    <Compile Include="MonoBehaviours\DebuggerController.cs" />
-    <Compile Include="MonoBehaviours\Debug\AbstractDebuggerController.cs" />
-    <Compile Include="MonoBehaviours\Debug\CyclopsDebuggerController.cs" />
-    <Compile Include="MonoBehaviours\Debug\ExosuitDebuggerController.cs" />
-    <Compile Include="MonoBehaviours\Debug\FlashlightDebuggerController.cs" />
-    <Compile Include="MonoBehaviours\Debug\FlashlightHelmetDebuggerController.cs" />
-    <Compile Include="MonoBehaviours\Debug\HoverbikeDebuggerController.cs" />
-    <Compile Include="MonoBehaviours\Debug\MapRoomCameraDebuggerController.cs" />
-    <Compile Include="MonoBehaviours\Debug\SeaglideDebuggerController.cs" />
-    <Compile Include="MonoBehaviours\Debug\SeamothDebuggerController.cs" />
-    <Compile Include="MonoBehaviours\Debug\SeatruckDebuggerController.cs" />
-    <Compile Include="MonoBehaviours\Debug\SubRootDebuggerController.cs" />
-    <Compile Include="Patches\Debug\CyclopsPatches.cs" />
-    <Compile Include="Patches\Debug\ExosuitPatches.cs" />
-    <Compile Include="Patches\Debug\FlashLightPatches.cs" />
-    <Compile Include="Patches\Debug\HoverbikePatches.cs" />
-    <Compile Include="Patches\Debug\MapRoomCameraPatches.cs" />
-    <Compile Include="Patches\Debug\SeaglidePatches.cs" />
-    <Compile Include="Patches\Debug\SeamothPatches.cs" />
-    <Compile Include="Patches\Debug\SeatruckPatches.cs" />
-    <Compile Include="Patches\Debug\SubRootPatches.cs" />
-    <Compile Include="Patches\EarlyAccessDisclaimerPatches.cs" />
-    <Compile Include="Patches\uGUIPatches.cs" />
-    <Compile Include="Patches\WeatherManagerPatches.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="Utility\CoroutineUtility.cs" />
-    <Compile Include="Utility\DebuggerUtility.cs" />
-    <Compile Include="Utility\FreezeTimeUtility.cs" />
-    <Compile Include="Utility\GraphicsUtility.cs" />
-    <Compile Include="Utility\HarmonyUtility.cs" />
-    <Compile Include="Utility\InventoryUtility.cs" />
-    <Compile Include="Utility\KeyCodeUtility.cs" />
-    <Compile Include="Utility\PDAUtility.cs" />
-    <Compile Include="Utility\uGUIExtensions.cs" />
-  </ItemGroup>
-  <Import Project="$(SolutionDir)Constants.props" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)Builds.targets" />
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>BetterSubnautica</RootNamespace>
+        <AssemblyName>BetterSubnautica</AssemblyName>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <StartAction>Program</StartAction>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(IsSubnautica)' == 'true'">
+        <StartProgram>$(GameDir)\Subnautica.exe</StartProgram>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(IsBelowZero)' == 'true'">
+        <StartProgram>$(GameDir)\SubnauticaZero.exe</StartProgram>
+    </PropertyGroup>
+
 </Project>

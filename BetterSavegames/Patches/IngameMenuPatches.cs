@@ -1,4 +1,4 @@
-﻿using BetterSavegames.MonoBehaviours;
+using BetterSavegames.MonoBehaviours;
 using HarmonyLib;
 using System.Collections;
 using UnityEngine;
@@ -7,14 +7,10 @@ namespace BetterSavegames.Patches
 {
     [HarmonyPatch(typeof(IngameMenu))]
     [HarmonyPatch(nameof(IngameMenu.SaveGameAsync))]
-    class IngameMenuPatches
+    class IngameMenuSaveGameAsyncPatch
     {
         static IEnumerator UpdateSlotCoroutine()
         {
-            //DebuggerUtility.ShowMessage($"{DateTime.Now}", $"0 ({ __instance.GetInstanceID()}) {__instance.GetType().Name}.UpdateSlotCoroutine");
-
-            IngameMenu.main.SetPleaseWaitVisible(true);
-
             yield return new WaitUntil(() => SavegameController.Instance.CanSaveGame());
 
             yield return SavegameController.Instance.ClearSlot(SaveLoadManager.main.currentSlot);
@@ -32,7 +28,7 @@ namespace BetterSavegames.Patches
             yield return IngameMenu.main.SaveGameAsync();
         }
 
-        static bool Prefix(IngameMenu __instance)
+        static bool Prefix(IngameMenu __instance, ref IEnumerator __result)
         {
             if (SavegameController.Instance != null)
             {
@@ -40,7 +36,7 @@ namespace BetterSavegames.Patches
                 if (SaveLoadManager.main.currentSlot != SavegameController.Instance.LatestSlot && SavegameController.Instance.CanSaveGame())
                 {
                     // Fix slot and re-execute SaveGameAsync
-                    SavegameController.Instance.StartCoroutine(UpdateSlotCoroutine());
+                    __result = UpdateSlotCoroutine();
                     return false;
                 }
             }

@@ -1,4 +1,4 @@
-﻿namespace BetterSubnautica.Components
+namespace BetterSubnautica.Components
 {
     public class EnergyMixinSource : AbstractEnergySource<EnergyMixin>
     {

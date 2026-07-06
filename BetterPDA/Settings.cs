@@ -1,5 +1,5 @@
-﻿using SMLHelper.V2.Json;
-using SMLHelper.V2.Options.Attributes;
+using Nautilus.Json;
+using Nautilus.Options.Attributes;
 using UnityEngine;
 
 namespace BetterPDA
@@ -10,7 +10,9 @@ namespace BetterPDA
         [Toggle("PDA Pause")]
         public bool EnablePDAPause { get; set; }
 
+#if SUBNAUTICA
         [Keybind("Eat/Use Button")]
+#endif
         public KeyCode EatUse { get; set; } = KeyCode.Mouse2;
     }
 }

@@ -1,4 +1,4 @@
-﻿#if BELOWZERO
+#if BELOWZERO
 using BetterLights.MonoBehaviours.Lights;
 using BetterLights.MonoBehaviours.ToggleLights;
 using HarmonyLib;
@@ -11,15 +11,9 @@ namespace BetterLights.Patches
     {
         static void Postfix(FlashlightHelmet __instance)
         {
-            if (__instance.gameObject.GetComponent<FlashlightHelmetLightsController>() == null)
-            {
-                __instance.gameObject.AddComponent<FlashlightHelmetLightsController>();
-            }
+            __instance.gameObject.EnsureComponent<FlashlightHelmetLightsController>();
 
-            if (__instance.gameObject.GetComponent<FlashlightHelmetToggleLightsController>() == null)
-            {
-                __instance.gameObject.AddComponent<FlashlightHelmetToggleLightsController>();
-            }
+            __instance.gameObject.EnsureComponent<FlashlightHelmetToggleLightsController>();
         }
     }
 }

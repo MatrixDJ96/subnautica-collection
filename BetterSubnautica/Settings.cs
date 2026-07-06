@@ -1,5 +1,5 @@
-using SMLHelper.V2.Json;
-using SMLHelper.V2.Options.Attributes;
+using Nautilus.Json;
+using Nautilus.Options.Attributes;
 
 namespace BetterSubnautica
 {
@@ -9,27 +9,25 @@ namespace BetterSubnautica
         [Toggle("Show Debug Info", Tooltip = "Enable debug on screen to show information about entities flagged below")]
         public bool ShowDebugInfo { get; set; } = false;
 
-#if SUBNAUTICA
-        [Toggle("Enable Cyclops Info")]
-        public bool CyclopsInfo { get; set; } = true;
-#endif
-
-        [Toggle("Enable Map room camera Info")]
-        public bool MapRoomCameraInfo { get; set; } = true;
-
         [Toggle("Enable SubRoot Info")]
         public bool SubRootInfo { get; set; } = true;
 
-        [Toggle("Enable Exosuit Info")]
-        public bool ExosuitInfo { get; set; } = true;
+        [Toggle("Enable Map Room Camera Info")]
+        public bool MapRoomCameraInfo { get; set; } = true;
 
 #if SUBNAUTICA
+        [Toggle("Enable Cyclops Info")]
+        public bool CyclopsInfo { get; set; } = true;
+
         [Toggle("Enable Seamoth Info")]
         public bool SeamothInfo { get; set; } = true;
 #elif BELOWZERO
         [Toggle("Enable Seatruck Info")]
         public bool SeatruckInfo { get; set; } = true;
 #endif
+
+        [Toggle("Enable Exosuit Info")]
+        public bool ExosuitInfo { get; set; } = true;
 
 #if BELOWZERO
         [Toggle("Enable Hoverbike Info")]

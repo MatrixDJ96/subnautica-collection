@@ -1,6 +1,6 @@
 using BetterSubnautica.Utility;
 using HarmonyLib;
-using SMLHelper.V2.Options.Attributes;
+using Nautilus.Options.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -10,6 +10,12 @@ namespace BetterQuickSlots.Utility
 {
     public class SlotsUtility
     {
+#if SUBNAUTICA
+        public static int VanillaSlotCount => uGUI_QuickSlots.quickSlotButtons.Length;
+#else
+        public static int VanillaSlotCount => Player.quickSlotButtonsCount;
+#endif
+
         public static KeyCode Slot1 => Core.Settings.Slot1;
         public static KeyCode Slot2 => Core.Settings.Slot2;
         public static KeyCode Slot3 => Core.Settings.Slot3;
@@ -23,7 +29,7 @@ namespace BetterQuickSlots.Utility
 
         private static string[] CreateSlotNames()
         {
-            if (Core.Settings.GetType().GetProperty(nameof(Core.Settings.SlotCount)) is PropertyInfo property)
+            if (Core.Settings.GetType().GetProperty(nameof(Core.Settings.SlotCount)) is { } property)
             {
                 var attribute = property.GetCustomAttribute<SliderAttribute>();
 
@@ -50,26 +56,39 @@ namespace BetterQuickSlots.Utility
         {
             if (slot < SlotNames.Length)
             {
+#if SUBNAUTICA
+                if (slot < VanillaSlotCount)
+                {
+                    return ModInputUtility.GetButtonName(uGUI_QuickSlots.quickSlotButtons[slot], withColor);
+                }
+
+                if (slot - VanillaSlotCount < Buttons.ExtraSlots.Length)
+                {
+                    return ModInputUtility.GetButtonName(Buttons.ExtraSlots[slot - VanillaSlotCount], withColor);
+                }
+#else
                 var bindingFlags = BindingFlags.Public | BindingFlags.Static;
 
-                if (typeof(SlotsUtility).GetProperty($"Slot{slot + 1}", bindingFlags) is PropertyInfo property)
+                if (typeof(SlotsUtility).GetProperty($"Slot{slot + 1}", bindingFlags) is { } property)
                 {
                     return KeyCodeUtility.GetName((KeyCode)property.GetValue(null), withColor);
                 }
+#endif
             }
 
             return "";
         }
 
+#if BELOWZERO
         public static void UpdateSlotBindings()
         {
             var device = GameInput.Device.Keyboard;
             var bindingSet = GameInput.BindingSet.Primary;
             var bindingFlags = BindingFlags.Public | BindingFlags.Static;
 
-            for (int i = 0; i < Player.quickSlotButtonsCount; i++)
+            for (int i = 0; i < VanillaSlotCount; i++)
             {
-                if (typeof(SlotsUtility).GetProperty($"Slot{i + 1}", bindingFlags) is PropertyInfo property)
+                if (typeof(SlotsUtility).GetProperty($"Slot{i + 1}", bindingFlags) is { } property)
                 {
                     var keyCode = (KeyCode)property.GetValue(null);
                     var button = (GameInput.Button)Enum.Parse(typeof(GameInput.Button), property.Name);
@@ -81,6 +100,7 @@ namespace BetterQuickSlots.Utility
                 }
             }
         }
+#endif
 
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {

@@ -1,4 +1,4 @@
-﻿using BetterSubnautica.MonoBehaviours.Debug;
+using BetterSubnautica.MonoBehaviours.Debug;
 using HarmonyLib;
 
 namespace BetterSubnautica.Patches.Debug
@@ -11,10 +11,7 @@ namespace BetterSubnautica.Patches.Debug
         {
             if (__instance is Seaglide)
             {
-                if (__instance.gameObject.GetComponent<SeaglideDebuggerController>() == null)
-                {
-                    __instance.gameObject.AddComponent<SeaglideDebuggerController>();
-                }
+                __instance.gameObject.EnsureComponent<SeaglideDebuggerController>();
             }
         }
     }

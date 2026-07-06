@@ -1,4 +1,4 @@
-﻿using BetterVehicles.MonoBehaviours;
+using BetterVehicles.MonoBehaviours;
 using HarmonyLib;
 
 namespace BetterVehicles.Patches

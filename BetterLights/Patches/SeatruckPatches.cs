@@ -16,36 +16,11 @@ namespace BetterLights.Patches
         {
             if (__instance.IsMainSegment())
             {
-                if (__instance.gameObject.GetComponent<SeatruckLightsController>() == null)
-                {
-                    __instance.gameObject.AddComponent<SeatruckLightsController>();
-                }
+                __instance.gameObject.EnsureComponent<SeatruckLightsController>();
 
-                if (__instance.gameObject.GetComponent<SeatruckToggleLightsController>() == null)
-                {
-                    __instance.gameObject.AddComponent<SeatruckToggleLightsController>();
-                }
+                __instance.gameObject.EnsureComponent<SeatruckToggleLightsController>();
 
-                if (__instance.gameObject.GetComponent<SeatruckVolumetricLightsController>() == null)
-                {
-                    __instance.gameObject.AddComponent<SeatruckVolumetricLightsController>();
-                }
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(SeaTruckSegment))]
-    [HarmonyPatch(nameof(SeaTruckSegment.SetPlayerInsideState))]
-    class SeaTruckSegmentSetPlayerInsideStatePatch
-    {
-        static void Postfix(SeaTruckSegment __instance, bool state)
-        {
-            if (state && __instance.IsMainSegment() && __instance.gameObject.GetComponent<IVolumetricLightsController>() is IVolumetricLightsController controller)
-            {
-                foreach (var volumetricLight in controller.VolumetricLights)
-                {
-                    volumetricLight.DisableVolume();
-                }
+                __instance.gameObject.EnsureComponent<SeatruckVolumetricLightsController>();
             }
         }
     }
@@ -62,7 +37,7 @@ namespace BetterLights.Patches
             {
                 if (__instance.lightingController != null)
                 {
-                    __instance.lightingController.LerpToState(controller.IsPowered() ? 2 : 0);
+                    __instance.lightingController.LerpToState(controller.IsPowered() ? 0 : 2);
                 }
             }
 

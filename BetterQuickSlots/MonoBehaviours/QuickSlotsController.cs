@@ -1,12 +1,8 @@
 using BetterQuickSlots.Utility;
 using UnityEngine;
 using BetterSubnautica.MonoBehaviours;
-#if SUBNAUTICA_STABLE
-using Text = UnityEngine.UI.Text;
-#else
 using TMPro;
 using Text = TMPro.TextMeshProUGUI;
-#endif
 
 namespace BetterQuickSlots.MonoBehaviours
 {
@@ -30,6 +26,25 @@ namespace BetterQuickSlots.MonoBehaviours
         public QuickSlots Target => Component != null ? component.target as QuickSlots : null;
 
         public bool ForceUpdate { get; set; } = true;
+
+#if SUBNAUTICA
+        // The game owns the slot bindings: refresh the labels whenever the player rebinds
+        // them in the options panel.
+        protected void OnEnable()
+        {
+            GameInput.OnBindingsChanged += OnBindingsChanged;
+        }
+
+        protected void OnDisable()
+        {
+            GameInput.OnBindingsChanged -= OnBindingsChanged;
+        }
+
+        private void OnBindingsChanged()
+        {
+            ForceUpdate = true;
+        }
+#endif
 
         protected void Update()
         {
@@ -59,11 +74,7 @@ namespace BetterQuickSlots.MonoBehaviours
 
                     if (Icons != null && Icons.Length == slotCount)
                     {
-#if SUBNAUTICA_STABLE
-                        var defaultText = HandReticle.main.interactPrimaryText;
-#else
                         var defaultText = HandReticle.main.compTextHand;
-#endif
 
                         var labels = new Text[slotCount];
 
@@ -77,14 +88,8 @@ namespace BetterQuickSlots.MonoBehaviours
                             labels[i].text = SlotsUtility.GetInputSlotName(i);
                             labels[i].fontSize = textFontSize;
 
-#if SUBNAUTICA_STABLE
-                            labels[i].alignment = TextAnchor.MiddleCenter;
-                            labels[i].verticalOverflow = VerticalWrapMode.Overflow;
-                            labels[i].horizontalOverflow = HorizontalWrapMode.Overflow;
-#else
                             labels[i].alignment = TextAlignmentOptions.Center;
                             labels[i].overflowMode = TextOverflowModes.Overflow;
-#endif
 
                             labels[i].rectTransform.localScale = Vector3.one;
                             labels[i].rectTransform.localPosition = Vector3.zero;
@@ -100,7 +105,9 @@ namespace BetterQuickSlots.MonoBehaviours
                             labels[i].rectTransform.anchoredPosition = new Vector2(0f, Icons[i].rectTransform.rect.y - textOffsetY);
                         }
 
+#if BELOWZERO
                         SlotsUtility.UpdateSlotBindings();
+#endif
                         TooltipFactory.RefreshActionStrings();
 
                         ForceUpdate = false;

@@ -1,4 +1,4 @@
-﻿#if BELOWZERO
+#if BELOWZERO
 namespace BetterSubnautica.Extensions
 {
     public static class DockableExtensions

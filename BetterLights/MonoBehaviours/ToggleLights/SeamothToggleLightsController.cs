@@ -1,11 +1,11 @@
-﻿#if SUBNAUTICA
+#if SUBNAUTICA
 using UnityEngine;
 
 namespace BetterLights.MonoBehaviours.ToggleLights
 {
     public class SeamothToggleLightsController : AbstractToggleLightsController<SeaMoth>
     {
-        protected override bool KeyDown => Input.GetKeyDown(Core.SeamothSettings.LightsButtonToggle);
+        protected override bool KeyDown => GameInput.GetButtonDown(Buttons.SeamothLightsToggle);
 
         protected override float EnergyConsumption => Core.SeamothSettings.LightsConsumption;
 

@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 namespace BetterLights.MonoBehaviours.ToggleLights
@@ -7,7 +6,11 @@ namespace BetterLights.MonoBehaviours.ToggleLights
     {
         protected override bool MandatoryToggleLights { get; } = false;
 
+#if SUBNAUTICA
+        protected override bool KeyDown => GameInput.GetButtonDown(Buttons.ExosuitLightsToggle);
+#else
         protected override bool KeyDown => Input.GetKeyDown(Core.ExosuitSettings.LightsButtonToggle);
+#endif
 
         protected override float EnergyConsumption => Core.ExosuitSettings.LightsConsumption;
 
@@ -19,21 +22,6 @@ namespace BetterLights.MonoBehaviours.ToggleLights
             {
                 StartCoroutine(CreateToggleLightsAsync());
             }
-        }
-
-        private IEnumerator CreateToggleLightsAsync()
-        {
-            var request = CraftData.GetPrefabForTechTypeAsync(TechType.Seamoth);
-            yield return request;
-            SeaMoth seamoth = request.GetResult().GetComponent<SeaMoth>();
-
-            if (seamoth == null || !InitializeToggleLights(seamoth))
-            {
-                Destroy(this);
-                yield break;
-            }
-
-            Start();
         }
 
         public override bool CanToggleLightsActive()

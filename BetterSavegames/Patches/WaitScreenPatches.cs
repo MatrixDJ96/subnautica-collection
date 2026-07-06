@@ -1,4 +1,4 @@
-﻿using BetterSavegames.MonoBehaviours;
+using BetterSavegames.MonoBehaviours;
 using HarmonyLib;
 
 namespace BetterSavegames.Patches
@@ -9,35 +9,19 @@ namespace BetterSavegames.Patches
     {
         static void Postfix(WaitScreen __instance)
         {
-            if (__instance.gameObject.GetComponent<WaitScreenController>() == null)
-            {
-                __instance.gameObject.AddComponent<WaitScreenController>();
-            }
+            __instance.gameObject.EnsureComponent<WaitScreenController>();
         }
     }
 
     [HarmonyPatch(typeof(WaitScreen))]
-    [HarmonyPatch(nameof(WaitScreen.Show))]
-    class WaitScreenShowPatch
-    {
-        static void Prefix(WaitScreen __instance)
-        {
-            if (__instance.gameObject.GetComponent<WaitScreenController>() is WaitScreenController controller)
-            {
-                controller.UnlockFramerate();
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(WaitScreen))]
-    [HarmonyPatch(nameof(WaitScreen.Hide))]
-    class WaitScreenHidePatch
+    [HarmonyPatch(nameof(WaitScreen.Update))]
+    class WaitScreenUpdatePatch
     {
         static void Postfix(WaitScreen __instance)
         {
             if (__instance.gameObject.GetComponent<WaitScreenController>() is WaitScreenController controller)
             {
-                controller.RestoreFramerate();
+                controller.OnWaitingChanged(__instance.isWaiting);
             }
         }
     }

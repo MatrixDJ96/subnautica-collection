@@ -1,4 +1,4 @@
-﻿#if BELOWZERO
+#if BELOWZERO
 using BetterSubnautica.Extensions;
 
 namespace BetterLights.MonoBehaviours.VolumetricLights

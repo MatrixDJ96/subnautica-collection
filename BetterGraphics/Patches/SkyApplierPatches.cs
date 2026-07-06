@@ -1,4 +1,4 @@
-﻿#if BELOWZERO
+#if BELOWZERO
 using HarmonyLib;
 using UnityEngine;
 

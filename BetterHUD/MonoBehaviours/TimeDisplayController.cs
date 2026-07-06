@@ -65,8 +65,9 @@ namespace BetterHUD.MonoBehaviours
         {
             while (
                 LightmappedPrefabs.main == null || LightmappedPrefabs.main.IsWaitingOnLoads() ||
-                PAXTerrainController.main == null || PAXTerrainController.main.isWorking ||
-                uGUI.main == null || uGUI.isLoading || HandReticle.main == null
+                PAXTerrainController.main == null || uGUI.main == null ||
+                WaitScreen.IsWaiting || HandReticle.main == null ||
+                DayNightCycle.main == null
                 )
             {
                 yield return null;
@@ -74,11 +75,7 @@ namespace BetterHUD.MonoBehaviours
 
             Style = new GUIStyle
             {
-#if SUBNAUTICA_STABLE
-                font = HandReticle.main.interactPrimaryText.font,
-#else
                 font = HandReticle.main.compTextHand.font.sourceFontFile,
-#endif
                 fontSize = Core.Settings.TimeFontSize,
                 fontStyle = (FontStyle)Core.Settings.TimeFontStyle,
                 clipping = TextClipping.Overflow
